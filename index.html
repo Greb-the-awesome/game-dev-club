@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <h3>wasd to move, arrow keys to shoot, bullets have a "lightning" effect that attacks nearby enemies</h3>
+        <h3>Play Pong!</h3>
+        <p>Beat the computer by moving the paddle while the ball is being hit - this will give it horizontal speed.</p>
         <canvas id="canv" width="1000" height="600"></canvas>
         <script>
             var downKeys = {};
             window.onkeydown = function(e) {downKeys[e.code] = true;}
             window.onkeyup = function(e) {downKeys[e.code] = false;}
         </script>
-        <script src="./shooter.js"></script>
+        <script src="./pong.js"></script>
     </body>
 </html>
