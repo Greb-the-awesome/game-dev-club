@@ -1,6 +1,8 @@
 var canvas = document.getElementById("canv");
 var ctx = canvas.getContext("2d");
 var w = canvas.clientWidth; var h = canvas.clientHeight;
+
+
 var ballX = w/2, ballY = h/2, velX = -w/100, velY = 0;
 var paddlePos = h/2, aipos = h/2;
 var lastAIdir = "up";
@@ -52,7 +54,6 @@ function gameLoop() {
         } else {
             velY += Math.random() * 2 + 4;
         }
-        // a bit of randomness
     }
 
     // move the ball

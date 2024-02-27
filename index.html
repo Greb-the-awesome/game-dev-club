@@ -1,15 +1,8 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <h1>Play Pong! - Controls: W and S</h1>
-        <p>Beat the computer by moving the paddle while the ball is being hit - this will give it horizontal speed.</p>
-        <h3>learn to make this game at game dev club! Next Friday (the 23rd) in room 224</h3>
-        <canvas id="canv" width="1000" height="600"></canvas>
-        <script>
-            var downKeys = {};
-            window.onkeydown = function(e) {downKeys[e.code] = true;}
-            window.onkeyup = function(e) {downKeys[e.code] = false;}
-        </script>
-        <script src="./pong.js"></script>
+        <h3>extra wide tetris: WASD to move pieces, space = hard drop</h3>
+        <canvas id="canv" width="600" height="600"></canvas>
+        <script src="./tetr.js"></script>
     </body>
 </html>
