@@ -26,13 +26,13 @@
         </style>
     </head>
     <body>
-        <h1>Play Pong!</h1>
+        <h1>Play Pong!<br>Controls: W and S</h1>
         <canvas id="canv" width="1000" height="600"></canvas>
         <script>
             var downKeys = {};
             window.onkeydown = function(e) {downKeys[e.code] = true;}
             window.onkeyup = function(e) {downKeys[e.code] = false;}
         </script>
-        <script src="./pong.js"></script>
+        <script src="./betterpong.js"></script>
     </body>
 </html>
