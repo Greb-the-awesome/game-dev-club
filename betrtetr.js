@@ -89,6 +89,17 @@ addEventListener("keydown", function(e) {
             return;
         }
     }
+    var tspin = false;
+    if (e.code == "ArrowUp" && currentPiece == "T" && onDelay) {
+        for (var coord of pieces[currentPiece][currentRotation]) {
+            if (grid[coord[0]+pieceX][coord[1]+pieceY-1]) {
+                tspin = true;
+            }
+        }
+    }
+    if (tspin) {
+        displayMessage("T-SPIN", 300, 600);
+    }
     
     if (e.code == "Space") {
         // hard drop
@@ -145,7 +156,15 @@ function displayMessage(msg, x, y) {
     n.style.left = x + "px"; n.style.top = y + "px";
     n.style.animation = "fadeout 2.5s";
 }
-
+ctx.strokeStyle = "lightgrey";
+for (var i=0; i<=w; i+=squareWidth) {
+    ctx.moveTo(i, 0);
+    ctx.lineTo(i, h);
+}
+for (var i=0; i<=h; i+=squareWidth) {
+    ctx.moveTo(0, i);
+    ctx.lineTo(w, i);
+}
 function gameLoop() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, 600, 600); // clear with black
@@ -167,15 +186,6 @@ function gameLoop() {
         for (var coord of pieces[queue[i]][0]) {
             ctx.fillRect((coord[0] + boardWidth) * squareWidth, (coord[1] + 6 + i * 5) * squareWidth, squareWidth, squareWidth);
         }
-    }
-    ctx.strokeStyle = "lightgrey";
-    for (var i=0; i<=w; i+=squareWidth) {
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, h);
-    }
-    for (var i=0; i<=h; i+=squareWidth) {
-        ctx.moveTo(0, i);
-        ctx.lineTo(w, i);
     }
     ctx.fillStyle = "grey";
     ctx.stroke();

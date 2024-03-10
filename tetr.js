@@ -142,6 +142,16 @@ addEventListener("keydown", function(e) {
     }
 })
 
+ctx.strokeStyle = "lightgrey";
+    for (var i=0; i<=w; i+=squareWidth) {
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, h);
+    }
+    for (var i=0; i<=h; i+=squareWidth) {
+        ctx.moveTo(0, i);
+        ctx.lineTo(w, i);
+    }
+
 function gameLoop() {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, 600, 600); // clear with black
@@ -153,15 +163,6 @@ function gameLoop() {
         ctx.fillStyle = "green";
     }
     ctx.fillText("hold: " + hold + ", next: " + queue, 0, squareWidth);
-    ctx.strokeStyle = "lightgrey";
-    for (var i=0; i<=w; i+=squareWidth) {
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, h);
-    }
-    for (var i=0; i<=h; i+=squareWidth) {
-        ctx.moveTo(0, i);
-        ctx.lineTo(w, i);
-    }
     ctx.fillStyle = "black";
     ctx.stroke();
     for (var i=0; i<boardWidth; i++) {
