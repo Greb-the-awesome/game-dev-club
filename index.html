@@ -1,30 +1,25 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            @keyframes fadeout {
-                0% {opacity: 1; font-size: 1rem; transform: scale(2);}
-                50% {opacity: 0.7; font-size: 1rem; transform: scale(2.5);}
-                100% {opacity: 0; font-size: 1rem; transform: scale(3);}
-            }
-            #statusholder {
-                font-family: "Courier New";
-                color: white;
-                position: absolute;
-                transform-origin: center;
-                left: 0px; top: 0px;
-            }
-        </style>
-    </head>
-    <body style="background-color: black;">
-        <h3 style="color:#00FF00">Tetris V2 - added soft drop, lock delay, and a bunch of other goodies</h3>
-        <canvas id="canv" width="600" height="600"></canvas>
-        <div id="statusholder"></div>
+    <body>
+        <h1>Florr.io 1v1</h1>
+        <strong>Player 1: WASD and space, Player 2: IJKL and semicolon</strong>
+        <div>
+            <h3>Player 1 loadout:</h3>
+            <button id="p1s0">Light</button> <button id="p1s1">Light</button> <button id="p1s2">Light</button> <button id="p1s3">Light</button> <button id="p1s4">Light</button>
+            <h3>Player 2 loadout:</h3>
+            <button onclick="toggleAI();" id="aibutton">AI/<strong>human</strong></button> <br>
+            <button id="p2s0">Light</button> <button id="p2s1">Light</button> <button id="p2s2">Light</button> <button id="p2s3">Light</button> <button id="p2s4">Light</button>
+            <br> <br>
+            <button onclick="startGame();" style="font-size:larger">Start!</button>
+        </div>
+        <div>
+            <canvas id="canv" width="1000" height="600"></canvas>
+        </div>
         <script>
             var downKeys = {};
-            addEventListener("keydown", function(e) {downKeys[e.code] = true;});
-            addEventListener("keyup", function(e) {downKeys[e.code] = false;});
+            window.onkeydown = function(e) {downKeys[e.code] = true;}
+            window.onkeyup = function(e) {downKeys[e.code] = false; if (e.code == "AltRight") {e.preventDefault();}}
         </script>
-        <script src="./betrtetr.js"></script>
+        <script src="./florr.js"></script>
     </body>
 </html>
