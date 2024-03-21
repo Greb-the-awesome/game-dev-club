@@ -3,18 +3,24 @@ var ctx = canvas.getContext("2d");
 var gameInterval;
 var w = canvas.clientWidth; var h = canvas.clientHeight;
 var bullets = []; var zombies = [];
-var ailoadout = [0, 0, 0, 0, 2];
+var ailoadout = [0, 0, 0, 0, 1];
 var gamestarted = false;
 var names = ["light", "wing", "faster", "rose"];
 var colors = ["grey", "blue", "yellow", "pink"];
-var roseheal = 0.02;
+var roseheal = 0.05;
 var damages = [1.5, 3, 0.5, 0.069420];
 var player1 = {x: 10, y: 10, health: 100, firingDelay: 10, loadout: [0, 0, 0, 0, 0], rotSpeed: 4, angle: 0};
 var player2 = {x: 900, y: 500, health: 100, firingDelay: 10, loadout: [0, 0, 0, 0, 0], ai: false, rotSpeed: 4, angle: 0};
 
 var aiTarget = 100;
 setInterval(() => {
-    if (aiTarget == 100) {aiTarget = 30;}
+    var cnt = 0;
+    for (var i=0; i<5; i++) {
+        if (player1.loadout[i] == 1) {
+            cnt++;
+        }
+    }
+    if (aiTarget == 100 && cnt <= 2) {aiTarget = 30;}
     else {aiTarget = 100;}
 }, 1200);
 
@@ -141,7 +147,7 @@ function gameLoop() {
         for (var i=-1; i<=1; i++) {
             for (var j=-1; j<=1; j++) {
                 var r = Math.abs(Math.sqrt((player2.x + i - player1.x) ** 2 + (player2.y + j - player1.y) ** 2) - aiTarget);
-                if (r < bestDist && checkCollision(player2.x, player2.y, 20, 20, 0, 0, w, h)) {
+                if (r < bestDist && checkCollision(player2.x+i, player2.y+j, 20, 20, 0, 0, w, h)) {
                     bestDist = r;
                     bestdx = i; bestdy = j;
                 }
