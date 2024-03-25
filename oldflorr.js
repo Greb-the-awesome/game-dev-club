@@ -1,28 +1,17 @@
 var canvas = document.getElementById("canv");
-var ctx = canvas.getContext("2d"); ctx.imageSmoothingEnabled = false; ctx.font = "50px Cutive";
-var grassPatchX = Math.random() * 600;
-var grassPatchY = Math.random() * 200;
+var ctx = canvas.getContext("2d");
 var gameInterval;
 var w = canvas.clientWidth; var h = canvas.clientHeight;
 var bullets = []; var zombies = [];
 var ailoadout = [0, 0, 0, 0, 1];
 var gamestarted = false;
-var images = [new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image()];
-images[0].src = "./florrio-assets/light.png";
-images[1].src = "./florrio-assets/wing.png";
-images[2].src = "./florrio-assets/faster.png";
-images[3].src = "./florrio-assets/rose.png";
-images[4].src = "./florrio-assets/hardcore.png";
-images[5].src = "./florrio-assets/player.png";
-images[6].src = "./florrio-assets/bg2.png";
-var colors = ["grey", "blue", "yellow", "pink"];
 var names = ["light", "wing", "faster", "rose"];
+var colors = ["grey", "blue", "yellow", "pink"];
 var roseheal = 0.05;
-var damages = [1, 1.5, 0.3, 0.069420];
+var damages = [1.5, 3, 0.5, 0.069420];
 var player1 = {x: 10, y: 10, health: 100, firingDelay: 10, loadout: [0, 0, 0, 0, 0], rotSpeed: 4, angle: 0};
 var player2 = {x: 900, y: 500, health: 100, firingDelay: 10, loadout: [0, 0, 0, 0, 0], ai: false, rotSpeed: 4, angle: 0};
 
-// AI stuff
 var aiTarget = 100;
 setInterval(() => {
     var cnt = 0;
@@ -35,14 +24,10 @@ setInterval(() => {
     else {aiTarget = 100;}
 }, 1200);
 
-function isAIattacking() {
-    return Math.abs(Math.sqrt((player2.x - player1.x) ** 2 + (player2.y - player1.y) ** 2) - 100) < 15;
-}
-
 // weapons
 for (var j=0; j<5; j++) {
     let i = j;
-    document.getElementById("p1s" + i).onclick = function() { // click button to toggle petal
+    document.getElementById("p1s" + i).onclick = function() {
         player1.loadout[i]++;
         player1.loadout[i] %= 4;
         this.innerHTML = names[player1.loadout[i]];
@@ -64,7 +49,7 @@ function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2) {
     return (Math.abs(ax1 - ax2) < (w1 + w2)/2) && (Math.abs(ay1 - ay2) < (h1 + h2)/2);
 }
 
-function startGame() { // read the button values and scroll
+function startGame() {
     if (gamestarted) {return;}
     gamestarted = true;
     window.scroll(0, 1000);
@@ -73,10 +58,9 @@ function startGame() { // read the button values and scroll
         player1.rotSpeed += player1.loadout[i] == 2?3:0;
         player2.rotSpeed += player2.loadout[i] == 2?3:0;
     }
-    document.getElementById("guiDiv").style.display = "none";
 }
 
-function toggleAI() { // AI toggle button
+function toggleAI() {
     player2.ai = !player2.ai;
     document.getElementById("aibutton").innerHTML = player2.ai?"<strong>AI</strong>/human":"AI/<strong>human</strong>";
     if (player2.ai) {
@@ -94,9 +78,6 @@ function toggleAI() { // AI toggle button
 
 function gameLoop() {
     ctx.clearRect(0, 0, w, h);
-
-    // nice flower patch
-    ctx.drawImage(images[6], grassPatchX, grassPatchY, 400, 400);
     
     // ----------- PLAYER 1 -----------
 
@@ -119,7 +100,7 @@ function gameLoop() {
 
     // draw the player
     ctx.fillStyle = "#FF0000";
-    ctx.drawImage(images[5], player1.x-15, player1.y-15, 30, 30);
+    ctx.fillRect(player1.x-10, player1.y-10, 20, 20);
     for (var i=0; i<5; i++) {
         var angle = player1.angle + Math.PI * 2 * i / 5;
         var r = 30;
@@ -136,16 +117,10 @@ function gameLoop() {
                 player1.health = Math.min(player1.health, 100);
             }
         }
+        ctx.fillStyle = colors[player1.loadout[i]];
         var x = player1.x + Math.cos(angle) * r, y = player1.y + Math.sin(angle) * r;
-        
-        // sprite rotation
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(angle);
-        ctx.drawImage(images[player1.loadout[i]], -10, -10, 20, 20);
-        ctx.restore();
-
-        if (checkCollision(x-10, y-10, 20, 20, player2.x, player2.y, 20, 20)) {
+        ctx.fillRect(x - 5, y - 5, 10, 10);
+        if (checkCollision(x, y, 10, 10, player2.x, player2.y, 20, 20)) {
             player2.health -= damages[player1.loadout[i]];
         }
     }
@@ -187,11 +162,13 @@ function gameLoop() {
 
     // draw the player
     ctx.fillStyle = "blue";
-    ctx.drawImage(images[5], player2.x-15, player2.y-15, 30, 30);
+    ctx.fillRect(player2.x-10, player2.y-10, 20, 20);
     for (var i=0; i<5; i++) {
         var angle = player2.angle + Math.PI * 2 * i / 5;
         var r = 30;
-        if ((!player2.ai && downKeys["Semicolon"]) || (player2.ai && isAIattacking())) {
+        if ((!player2.ai && downKeys["Semicolon"]) || (player2.ai &&
+            Math.abs(Math.sqrt((player2.x - player1.x) ** 2 + (player2.y - player1.y) ** 2) - 100) < 15
+        )) {
             if (player2.loadout[i] != 3) {
                 r = 100;
             }
@@ -204,31 +181,18 @@ function gameLoop() {
                 player2.health = Math.min(player2.health, 100);
             }
         }
+        ctx.fillStyle = colors[player2.loadout[i]];
         var x = player2.x + Math.cos(angle) * r, y = player2.y + Math.sin(angle) * r;
-
-        // sprite rotation
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(angle);
-        ctx.drawImage(images[player2.loadout[i]], -10, -10, 20, 20);
-        ctx.restore();
-
-        if (checkCollision(x-10, y-10, 20, 20, player1.x, player1.y, 20, 20)) {
+        ctx.fillRect(x - 5, y - 5, 10, 10);
+        if (checkCollision(x, y, 10, 10, player1.x, player1.y, 20, 20)) {
             player1.health -= damages[player2.loadout[i]];
         }
     }
 
     // gui
     ctx.fillStyle = "#000000";
-    // health bar
-    for (var i=0; i<6; i++) {
-        if (player1.health * 6 / 100 > i) {
-            ctx.drawImage(images[4], 40 + i * 70, 30, 66, 66);
-        }
-        if (player2.health * 6 / 100 > i) {
-            ctx.drawImage(images[4], 530 + i * 70, 30, 66, 66);
-        }
-    }
+    ctx.font = "50px Calibri";
+    ctx.fillText("player healths: " + Math.round(player1.health) + ", " + Math.round(player2.health), 0, 100);
 
     // no cheesing allowed
     if (!checkCollision(player1.x, player1.y, 20, 20, 0, 0, w, h) || !checkCollision(player2.x, player2.y, 20, 20, 0, 0, w, h)) {

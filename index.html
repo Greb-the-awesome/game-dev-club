@@ -1,20 +1,63 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <!-- Google Fonts :) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cutive&family=East+Sea+Dokdo&family=Righteous&display=swap" rel="stylesheet">
+        <style>
+            * {
+                image-rendering: pixelated;
+                font-family: Cutive, 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                color:chartreuse;
+            }
+            body {
+                background-image: url("./florrio-assets/bg1.png");
+                background-size:400px;
+            }
+            button {
+                background-image: url("./florrio-assets/button.png");
+                background-size: cover;
+                background-position: center center;
+                border: none;
+                padding: 20px;
+                color: darkgreen;
+                margin: 5px;
+            }
+            button:disabled {
+                color: gray;
+            }
+            #guiDiv {
+                position: absolute;
+                width: 1000px;
+                height: 600px;
+                left:0; top:0;
+            }
+            strong {color:darkgreen;}
+            canvas {
+                image-rendering: pixelated;
+                background-image: url("./florrio-assets/frame.png");
+                background-size: cover;
+            }
+        </style>
+    </head>
     <body>
-        <h1>Florr.io 1v1</h1>
-        <strong>Player 1: WASD and space, Player 2: IJKL and semicolon</strong>
-        <div>
+        <center>
+        <div id="guiDiv">
+            <center>
+            <h1>Florr.io PvP</h1>
+            <strong>Player 1: WASD and space, Player 2: IJKL and semicolon</strong>
             <h3>Player 1 loadout:</h3>
-            <button id="p1s0">Light</button> <button id="p1s1">Light</button> <button id="p1s2">Light</button> <button id="p1s3">Light</button> <button id="p1s4">Light</button>
+            <button id="p1s0">light</button> <button id="p1s1">light</button> <button id="p1s2">light</button> <button id="p1s3">light</button> <button id="p1s4">light</button>
             <h3>Player 2 loadout:</h3>
             <button onclick="toggleAI();" id="aibutton">AI/<strong>human</strong></button> <br>
-            <button id="p2s0">Light</button> <button id="p2s1">Light</button> <button id="p2s2">Light</button> <button id="p2s3">Light</button> <button id="p2s4">Light</button>
+            <button id="p2s0">light</button> <button id="p2s1">light</button> <button id="p2s2">light</button> <button id="p2s3">light</button> <button id="p2s4">light</button>
             <br> <br>
             <button onclick="startGame();" style="font-size:larger">Start!</button>
+            </center>
         </div>
-        <div>
-            <canvas id="canv" width="1000" height="600"></canvas>
-        </div>
+        </center>
+        <canvas id="canv" width="1000" height="600"></canvas>
         <script>
             var downKeys = {};
             window.onkeydown = function(e) {downKeys[e.code] = true;}
