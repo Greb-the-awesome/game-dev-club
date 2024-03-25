@@ -7,14 +7,15 @@ var w = canvas.clientWidth; var h = canvas.clientHeight;
 var bullets = []; var zombies = [];
 var ailoadout = [0, 0, 0, 0, 1];
 var gamestarted = false;
-var images = [new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image()];
+var images = [new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image()];
 images[0].src = "./florrio-assets/light.png";
 images[1].src = "./florrio-assets/wing.png";
 images[2].src = "./florrio-assets/faster.png";
 images[3].src = "./florrio-assets/rose.png";
 images[4].src = "./florrio-assets/hardcore.png";
-images[5].src = "./florrio-assets/player.png";
-images[6].src = "./florrio-assets/bg2.png";
+images[5].src = "./florrio-assets/sadhardcore.png";
+images[6].src = "./florrio-assets/player.png";
+images[7].src = "./florrio-assets/bg2.png";
 var colors = ["grey", "blue", "yellow", "pink"];
 var names = ["light", "wing", "faster", "rose"];
 var roseheal = 0.05;
@@ -96,7 +97,7 @@ function gameLoop() {
     ctx.clearRect(0, 0, w, h);
 
     // nice flower patch
-    ctx.drawImage(images[6], grassPatchX, grassPatchY, 400, 400);
+    ctx.drawImage(images[7], grassPatchX, grassPatchY, 400, 400);
     
     // ----------- PLAYER 1 -----------
 
@@ -119,7 +120,7 @@ function gameLoop() {
 
     // draw the player
     ctx.fillStyle = "#FF0000";
-    ctx.drawImage(images[5], player1.x-15, player1.y-15, 30, 30);
+    ctx.drawImage(images[6], player1.x-15, player1.y-15, 30, 30);
     for (var i=0; i<5; i++) {
         var angle = player1.angle + Math.PI * 2 * i / 5;
         var r = 30;
@@ -187,7 +188,7 @@ function gameLoop() {
 
     // draw the player
     ctx.fillStyle = "blue";
-    ctx.drawImage(images[5], player2.x-15, player2.y-15, 30, 30);
+    ctx.drawImage(images[6], player2.x-15, player2.y-15, 30, 30);
     for (var i=0; i<5; i++) {
         var angle = player2.angle + Math.PI * 2 * i / 5;
         var r = 30;
@@ -224,9 +225,13 @@ function gameLoop() {
     for (var i=0; i<6; i++) {
         if (player1.health * 6 / 100 > i) {
             ctx.drawImage(images[4], 40 + i * 70, 30, 66, 66);
+        } else {
+            ctx.drawImage(images[5], 40 + i * 70, 30, 66, 66);
         }
         if (player2.health * 6 / 100 > i) {
             ctx.drawImage(images[4], 530 + i * 70, 30, 66, 66);
+        } else {
+            ctx.drawImage(images[5], 530 + i * 70, 30, 66, 66);
         }
     }
 
