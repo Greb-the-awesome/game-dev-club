@@ -1,13 +1,12 @@
 var canvas = document.getElementById("canv");
 var ctx = canvas.getContext("2d"); ctx.imageSmoothingEnabled = false; ctx.font = "50px Cutive";
-var grassPatchX = Math.random() * 600;
-var grassPatchY = Math.random() * 200;
 var gameInterval;
 var w = canvas.clientWidth; var h = canvas.clientHeight;
 var bullets = []; var zombies = [];
 var ailoadout = [0, 0, 0, 0, 1];
 var gamestarted = false;
 var images = [new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image()];
+var gifs = [new Image(), new Image()];
 images[0].src = "./florrio-assets/light.png";
 images[1].src = "./florrio-assets/wing.png";
 images[2].src = "./florrio-assets/faster.png";
@@ -16,12 +15,14 @@ images[4].src = "./florrio-assets/hardcore.png";
 images[5].src = "./florrio-assets/sadhardcore.png";
 images[6].src = "./florrio-assets/player.png";
 images[7].src = "./florrio-assets/bg2.png";
+gifs[0].src = "./florrio-assets/bg2.png";
+gifs[1].src = "./florrio-assets/heartgone.png";
 var colors = ["grey", "blue", "yellow", "pink"];
 var names = ["light", "wing", "faster", "rose"];
 var roseheal = 0.05;
 var damages = [1, 1.5, 0.3, 0.069420];
-var player1 = {x: 10, y: 10, health: 100, firingDelay: 10, loadout: [0, 0, 0, 0, 0], rotSpeed: 4, angle: 0};
-var player2 = {x: 900, y: 500, health: 100, firingDelay: 10, loadout: [0, 0, 0, 0, 0], ai: false, rotSpeed: 4, angle: 0};
+var player1 = {x: 10, y: 10, health: 100, firingDelay: 10, loadout: [0, 0, 0, 0, 0], rotSpeed: 4, angle: 0, lastHearts: 5};
+var player2 = {x: 900, y: 500, health: 100, firingDelay: 10, loadout: [0, 0, 0, 0, 0], ai: false, rotSpeed: 4, angle: 0, lastHearts: 5};
 
 // AI stuff
 var aiTarget = 100;
@@ -75,6 +76,7 @@ function startGame() { // read the button values and scroll
         player2.rotSpeed += player2.loadout[i] == 2?3:0;
     }
     document.getElementById("guiDiv").style.display = "none";
+    playGif(0, 200, 100, 10, true);
 }
 
 function toggleAI() { // AI toggle button
@@ -93,11 +95,64 @@ function toggleAI() { // AI toggle button
     }
 }
 
+var imagesToRender = []; // [imageIndex, x, y, frameNum, timer, scale, loop]
+
+function playGif(img, x, y, scale, loop) {
+    // play a gif from a sprite sheet, with a fixed amount of 5 frames.
+    imagesToRender.push([img, x, y, 0, 0, scale, loop]);
+}
+
+function updateGifs() {
+    for (var i of imagesToRender) {
+        i[4]++;
+        if (i[4] > 60) {
+            i[4] = 0;
+            i[3]++;
+        }
+        if (i[3] > 4) {
+            if (i[6]) {
+                i[3] %= 5;
+            } else {
+                continue;
+            }
+        }
+        var w = gifs[i[0]].width / 5;
+        var h = gifs[i[0]].height;
+        ctx.drawImage(gifs[i[0]], w * i[3], 0, w, h, i[1], i[2], w * i[5], h * i[5]);
+    }
+}
+
 function gameLoop() {
     ctx.clearRect(0, 0, w, h);
 
-    // nice flower patch
-    ctx.drawImage(images[7], grassPatchX, grassPatchY, 400, 400);
+    // gui
+    ctx.fillStyle = "#000000";
+    // health bar
+    var player1Hearts = 0, player2Hearts = 0;
+    for (var i=0; i<6; i++) {
+        if (player1.health * 6 / 100 > i) {
+            ctx.drawImage(images[4], 40 + i * 70, 30, 66, 66);
+            player1Hearts = i;
+        } else {
+            ctx.drawImage(images[5], 40 + i * 70, 30, 66, 66);
+        }
+        if (player2.health * 6 / 100 > i) {
+            ctx.drawImage(images[4], 530 + i * 70, 30, 66, 66);
+            player2Hearts = i;
+        } else {
+            ctx.drawImage(images[5], 530 + i * 70, 30, 66, 66);
+        }
+    }
+    if (player1Hearts != player1.lastHearts) {
+        playGif(1, 40+player1.lastHearts*70, 30, 6, false);
+        player1.lastHearts = player1Hearts;
+    }
+    if (player2Hearts != player2.lastHearts) {
+        playGif(1, 530+player2.lastHearts*70, 30, 6, false);
+        player2.lastHearts = player2Hearts;
+    }
+
+    updateGifs();
     
     // ----------- PLAYER 1 -----------
 
@@ -216,22 +271,6 @@ function gameLoop() {
 
         if (checkCollision(x-10, y-10, 20, 20, player1.x, player1.y, 20, 20)) {
             player1.health -= damages[player2.loadout[i]];
-        }
-    }
-
-    // gui
-    ctx.fillStyle = "#000000";
-    // health bar
-    for (var i=0; i<6; i++) {
-        if (player1.health * 6 / 100 > i) {
-            ctx.drawImage(images[4], 40 + i * 70, 30, 66, 66);
-        } else {
-            ctx.drawImage(images[5], 40 + i * 70, 30, 66, 66);
-        }
-        if (player2.health * 6 / 100 > i) {
-            ctx.drawImage(images[4], 530 + i * 70, 30, 66, 66);
-        } else {
-            ctx.drawImage(images[5], 530 + i * 70, 30, 66, 66);
         }
     }
 
