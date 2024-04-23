@@ -26,7 +26,7 @@ var gunSpecs = {
 	},
 	"SV-98": {
 		delay: 120,
-		damage: 180,
+		damage: 900,
 		capacity: 10,
 		currentCapacity: 10,
 		reloadTime: 2500,
@@ -41,7 +41,7 @@ var gunSpecs = {
 	},
 	"ARX-160": {
 		delay: 20,
-		damage: 100,
+		damage: 200,
 		capacity: 30,
 		currentCapacity: 30,
 		reloadTime: 1500,
