@@ -105,6 +105,7 @@ var guiText = [
 	["gleb", "gleb", "30px Calibri", "30px Calibri"],
 	["gleb", "gleb", "30px Calibri", "30px Calibri"],
 	["gleb", "[1] PKP tower | [2] EMR tower | [3] Vector tower", "30px Calibri", "30px Calibri"],
+	["", "", "30px Calibri", "30px Calibri"],
 ]
 
 function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2) {
@@ -122,7 +123,7 @@ function startGame() { // start the game and remove the home screen
 	setTimeout(function() {
 		setInterval(function() {
 			guiText[0][0] = "Wave number " + currentWave;
-			spawnWave(Math.log(currentWave+1) + 3, -Math.pow(0.9, currentWave - 21) + 10);
+			spawnWave(Math.pow(Math.log(currentWave + 0.5), 2.5) + 5, -Math.pow(0.9, currentWave - 21) + 10);
 			currentWave++;
 			money += 25;
 		}, 7500);
@@ -158,6 +159,10 @@ canvas.onclick = function(e) {
 	if (money >= 100) {
 		towers.push({x: mouseX, y: mouseY, type: currentGun, gunSettings: {angle: 0, delay: 0, currentCapacity: 0}});
 		money -= 100;
+		if (towers.length > 10) {
+			guiText[3][0] = "Audio turned off to save performance."
+			Audio = function(e) {return {play: function() {}};};
+		}
 	} else {
 		alert("not enough money: cost for all towers is 50");
 	}
@@ -275,7 +280,7 @@ function gameLoop() {
 			t.gunSettings.reloading = true;
 			let _t = t;
 			new Audio(gun.sounds.reload).play();
-			setTimeout(function() {_t.gunSettings.currentCapacity = gun.capacity; _t.gunSettings.reloading = false;}, gun.reloadTime);
+			setTimeout(function() {_t.gunSettings.currentCapacity = gunSpecs[_t.type].capacity; _t.gunSettings.reloading = false;}, gun.reloadTime);
 		}
 
 		if (t.gunSettings.currentCapacity > gun.capacity) {t.gunSettings.currentCapacity = gun.capacity;}
