@@ -19,22 +19,8 @@
 				75% {transform: translate(1000px, 0px);}
 				100% {transform: translate(0, 0);}
 			}
-			@keyframes fadein {
-				0% {opacity: 0;}
-				50% {opacity: 0;}
-				100% {opacity: 1;}
-			}
-			@keyframes pulse {
-				0% {transform: rotate(45deg) scale(1);}
-				50% {transform: rotate(45deg) scale(1.4);}
-				100% {transform: rotate(45deg) scale(1);}
-			}
 
-			/* everything else */	
-			*::-webkit-scrollbar {
-				display: none;
-			}
-			
+			/* everything else */			
 			#b {
 				display: inline-block;
 				color: red;
@@ -49,35 +35,9 @@
 				animation-duration: 1s;
 				animation-fill-mode: forwards; /* freeze after the animation stopped playing */
 			}
-			#desc {
-				font-family: "Impact";
-				font-size: 3rem;
-				margin: 0.2rem;
-				font-style: italic;
-				color: #40a887;
-			}
-			#otherguis {
-				animation-name: fadein;
-				animation-duration: 3s;
-			}
-			#smallmsg {
-				position: absolute;
-				left: 35rem;
-				top: -15rem;
-				animation-name: pulse;
-				animation-duration: 0.5s;
-				animation-iteration-count: infinite;
-				z-index: 69420;
-				width: 100px;
-				color: #40a887;
-				font-family: Impact;
-				font-size: 3rem;
-			}
 			h1 {
 				font-family: "Impact";
-				font-size: 10rem;
-				margin-top: 0;
-				margin-bottom: 1rem;
+				font-size: 4rem;
 			}
 			h2 {
 				font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -86,23 +46,22 @@
 	</head>
 	<body style="background-image: url('./btd-assets/bg.png');">
 		<center>
-		<h3>Come to game dev club this Friday the 3rd in room 224</h3>
+		<h3>Come to game dev club this Friday the 26th in room 224</h3>
 		<div id="guiDiv">
 			<center>
-			<span style="position: relative; display: inline-block; width: 0px;">
-				<p id="smallmsg" style="opacity: 0;">Actually&nbsp;BTD!</p>
-			</span>
-			<h1 id="b">T</h1><h1 style="display:inline-block;">T D 6</h1> <h1 id="pointnine"> (.9)</h1> <br>
+			<h1 id="b">T </h1><h1 style="display:inline-block;">T D 6</h1> <h1 id="pointnine"> (.9)</h1> <br>
 			
-			<div id="otherguis">
-				<p id="desc">Turret tower defense 69</p>
-				<br> <br>
-				<button onclick="startGame();" style="font-size:larger">Start!</button>
-				<br><br>
-				<h2>HOW TO PLAY:<br>
-				Bloons will appear on the left.<br>Prevent them from getting to the right by placing down towers (click).
-				<br>Use number keys 1, 2, 3 to try different towers.</h2>
-			</div>
+			<strong>Turret tower defense 69</strong>
+			<br> <br>
+			<button onclick="startGame();" style="font-size:larger">Start!</button>
+			<br><br>
+			<h2>HOW TO PLAY:<br>
+			Bloons will appear at the left side of the map, and you don't want them to get to the right side!<br>
+			Kill bloons by shooting them with your two weapons on your turret. (click to shoot)<br>
+			You only have 100 lives before you lose the game.<br><br>
+		
+			this also kinda looks like an aim trainer so if you wanna get better<br>
+			at val then you can play this game too xdxdxd</h2>
 			</center>
 		</div>
 		</center>
@@ -115,14 +74,7 @@
 			window.onmousedown = function() {mouseDown = true;}
 			window.onmouseup = function() {mouseDown = false;}
 			document.getElementById("canv").onmousemove = function(e) {mouseX = e.offsetX; mouseY = e.offsetY;}
-
-			{ // most complicated fadein ever
-				let opacity = 0;
-				let elem = document.getElementById("smallmsg");
-				let f = function() {if (opacity >= 1) {return;} else {opacity += 0.01; elem.style.opacity = opacity; setTimeout(f, 20);}};
-				setTimeout(f, 2000);
-			}
 		</script>
-		<script src="./oldbtd.js"></script>
+		<script src="./olderbtd.js"></script>
 	</body>
 </html>

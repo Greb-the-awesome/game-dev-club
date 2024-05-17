@@ -7,6 +7,7 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Cutive&family=East+Sea+Dokdo&family=Righteous&display=swap" rel="stylesheet">
 		<style>
+			* {image-rendering: pixelated;}
 			/* animations */
 			@keyframes slap {
 				0% {opacity: 0; transform: rotateX(-70deg);}
@@ -29,6 +30,12 @@
 				50% {transform: rotate(45deg) scale(1.4);}
 				100% {transform: rotate(45deg) scale(1);}
 			}
+			@keyframes flashingcolors_a {
+				0% {color: red;}
+				33% {color: yellow;}
+				66% {color: blueviolet;}
+				100% {color: red;}
+			}
 
 			/* everything else */	
 			*::-webkit-scrollbar {
@@ -44,7 +51,7 @@
 			}
 			#pointnine {
 				display: inline-block;
-				color: orange;
+				color: olive;
 				animation-name: drop;
 				animation-duration: 1s;
 				animation-fill-mode: forwards; /* freeze after the animation stopped playing */
@@ -54,7 +61,7 @@
 				font-size: 3rem;
 				margin: 0.2rem;
 				font-style: italic;
-				color: #40a887;
+				color: white;
 			}
 			#otherguis {
 				animation-name: fadein;
@@ -69,9 +76,17 @@
 				animation-iteration-count: infinite;
 				z-index: 69420;
 				width: 100px;
-				color: #40a887;
+				color: white;
 				font-family: Impact;
 				font-size: 3rem;
+			}
+			#flashingcolors {
+				animation-name: flashingcolors_a;
+				animation-duration: 3s;
+				animation-iteration-count: infinite;
+				font-size: 2rem;
+				margin: 0;
+				font-family: impact;
 			}
 			h1 {
 				font-family: "Impact";
@@ -82,11 +97,18 @@
 			h2 {
 				font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 			}
+			button {
+				background-image: url('./btd-assets/button.png');
+				border: none;
+				background-size: cover;
+				padding: 2rem 5rem;
+				font-family: impact;
+			}
 		</style>
 	</head>
-	<body style="background-image: url('./btd-assets/bg.png');">
+	<body style="background-image: url('./btd-assets/bg.svg'); background-size: cover;">
 		<center>
-		<h3>Come to game dev club this Friday the 3rd in room 224</h3>
+		<h3 id ="flashingcolors">Come to game dev club this Friday the 17th in room 224</h3>
 		<div id="guiDiv">
 			<center>
 			<span style="position: relative; display: inline-block; width: 0px;">

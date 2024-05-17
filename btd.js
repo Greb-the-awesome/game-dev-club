@@ -8,6 +8,23 @@ var lives = 100;
 var framesSurvived = 0, score = 0;
 var money = 100;
 
+// images
+var images = {
+	"bg": "./btd-assets/bg.svg",
+	"platform": "./btd-assets/platform_world.svg",
+	"bloon": "./btd-assets/bloon.png",
+	"PKP Pecheneg_world": "./btd-assets/pkp_world.svg",
+	"Pecheneg Unlocked_world": "./btd-assets/pkp_world.svg",
+	"M39 EMR_world": "./btd-assets/emr_world.svg",
+	"Vector_world": "./btd-assets/vector_world.svg"
+}
+
+for (var prop in images) {
+	var im = new Image();
+	im.src = images[prop];
+	images[prop] = im;
+}
+
 // specs for all the guns
 var gunSpecs = {
 	"PKP Pecheneg": {
@@ -17,7 +34,7 @@ var gunSpecs = {
 		currentCapacity: 200,
 		reloadTime: 5000, // RELOAD IN MS
 		texture: "green",
-		gunLength: 150,
+		gunLength: 200,
 		gunWidth: 20,
 		bulletTexture: "yellow",
 		bulletSpeed: 4,
@@ -27,6 +44,7 @@ var gunSpecs = {
 		sounds: {
 			reload: "https://namerio.biz/audio/guns/pkp_reload_01.mp3",
 			fire: "https://github.com/HasangerGames/suroi/raw/master/client/public/audio/sfx/weapons/lewis_gun_fire.mp3",
+			// fire: "https://namerio.biz/audio/guns/pkp_01.mp3"
 		}
 	},
 	"Pecheneg Unlocked": {
@@ -56,7 +74,7 @@ var gunSpecs = {
 		currentCapacity: 10,
 		reloadTime: 2500,
 		texture: "olive",
-		gunLength: 200,
+		gunLength: 150,
 		gunWidth: 15,
 		bulletTexture: "aqua",
 		bulletSpeed: 15,
@@ -75,7 +93,7 @@ var gunSpecs = {
 		currentCapacity: 25,
 		reloadTime: 1600,
 		texture: "gray",
-		gunLength: 50,
+		gunLength: 100,
 		gunWidth: 20,
 		bulletTexture: "purple",
 		bulletSpeed: 10,
@@ -84,7 +102,7 @@ var gunSpecs = {
 		piercing: false,
 		sounds: {
 			reload: "https://namerio.biz/audio/guns/vector_reload_01.mp3",
-			fire: "https://namerio.biz/audio/guns/vector_01.mp3",
+			fire: "https://namerio.biz/audio/guns/scorpion_01.mp3",
 		}
 	}
 };
@@ -123,7 +141,7 @@ function startGame() { // start the game and remove the home screen
 	setTimeout(function() {
 		setInterval(function() {
 			guiText[0][0] = "Wave number " + currentWave;
-			spawnWave(Math.pow(Math.log(currentWave + 0.5), 2.5) + 5, -Math.pow(0.9, currentWave - 21) + 10);
+			spawnWave(Math.pow(Math.log(currentWave + 0.5), 2.5) + 5, -Math.pow(0.9, currentWave - 18) + 7.5);
 			currentWave++;
 			money += 25;
 		}, 7500);
@@ -139,7 +157,7 @@ function spawnWave(num, difficulty) {
 		if (n > 0) {
 			var adjDiff = difficulty * (1+Math.random()*0.3);
 			var col = "rgb(" + (adjDiff/10*255) + ", " + (255-adjDiff/10*255) + ", 0)";
-			bloons.push({texture: col, health: 50 * adjDiff, x: 0, y: 300, size: 15 * (Math.sqrt(adjDiff+1)), age: 0});
+			bloons.push({texture: col, health: 50 * adjDiff, x: 0, y: 300, size: 15 * (Math.sqrt(adjDiff+1)) + 40, age: 0});
 			setTimeout(()=>{f(n-1);}, delay);
 		}
 	};
@@ -171,12 +189,12 @@ canvas.onclick = function(e) {
 function gameLoop() {
 	ctx.clearRect(0, 0, w, h);
 	ctx.fillStyle = "lightblue";
-	ctx.fillRect(0, 0, w, h);
+	ctx.drawImage(images.bg, 0, 0, w, h);
 	framesSurvived++;
 	score += 0.3;
 
 	// draw the path
-	{
+	/*{
 		let age = 0;
 		ctx.beginPath();
 		while (getPath(age)[0] < 1000) {
@@ -185,7 +203,7 @@ function gameLoop() {
 			age += 3;
 		}
 		ctx.stroke();
-	}
+	}*/
 
 	// draw the bloons + process them
 	var newBloons = [];
@@ -206,7 +224,7 @@ function gameLoop() {
 		}
 
 		ctx.fillStyle = b.texture; // draw
-		ctx.fillRect(b.x - b.size/2, b.y - b.size/2, b.size, b.size);
+		ctx.drawImage(images.bloon, b.x - b.size/2, b.y - b.size/2, b.size, b.size);
 	}
 	bloons = newBloons;
 
@@ -247,7 +265,6 @@ function gameLoop() {
 	ctx.font = "30px Calibri";
 	for (var t of towers) {
 		var gun = gunSpecs[t.type];
-		ctx.fillStyle = gun.texture;
 
 		// we will target a random bloon
 		if (!t.target || !bloons[t.target]) {
@@ -286,11 +303,13 @@ function gameLoop() {
 		if (t.gunSettings.currentCapacity > gun.capacity) {t.gunSettings.currentCapacity = gun.capacity;}
 
 		// draw tower
+		ctx.drawImage(images.platform, t.x-40, t.y-40, 80, 80);
 		ctx.save();
 		ctx.translate(t.x, t.y);
 		ctx.rotate(t.gunSettings.angle);
 		ctx.fillStyle = gunSpecs[t.type].texture;
-		ctx.fillRect(-gunSpecs[t.type].gunLength/2, -gunSpecs[t.type].gunWidth/2, gunSpecs[t.type].gunLength, gunSpecs[t.type].gunWidth);
+		var img = images[t.type + "_world"];
+		ctx.drawImage(img, -20, -20, img.width/img.height*40, 40);
 		ctx.restore();
 
 		if (t.gunSettings.reloading) {
