@@ -211,7 +211,7 @@ function gameLoop() {
     player2.reloadRemaining[player2.selected] -= 8.333;
 
     // player rotation
-    player2.angle = Math.atan2(player1.y - player2.y, player1.x - player2.x) + Math.sin(t*0.04) * 0.3;
+    player2.angle = Math.atan2(player1.y - player2.y, player1.x - player2.x) + Math.sin(t*0.02) * 0.3;
     t += Math.random();
 
     // draw the player
