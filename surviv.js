@@ -6,6 +6,7 @@ var gamestarted = false;
 var player1 = {x: 10, y: 10, health: 100, firingDelay: 10, loadout: [0, 0], selected: 0, angle: 0, roundsRemaining: [0, 0],
     delays: [10, 10], reloadRemaining: [20, 20]
 };
+var playerSpeed = 3;
 var player2 = {x: 900, y: 500, health: 100, firingDelay: 10, loadout: [2, 1], selected: 0, angle: 0, roundsRemaining: [0, 0],
     delays: [10, 10], reloadRemaining: [20, 20],
     currentStrafeDir: false,
@@ -19,6 +20,21 @@ var player2 = {x: 900, y: 500, health: 100, firingDelay: 10, loadout: [2, 1], se
 };
 player2.newStrafeDir();
 var names = ["DP-28", "SCAR-H", "Mosin-Nagant"], bullets = [];
+
+var images = { // image --> url
+    "player": "./surviv-assets/player_world.svg",
+    "ai": "./surviv-assets/ai_world.svg",
+    "DP-28_world": "./surviv-assets/dp_world.svg",
+    "SCAR-H_world": "./surviv-assets/scar_world.svg",
+    "Mosin-Nagant_world": "./surviv-assets/mosin_world.svg",
+};
+var imgScaleFactor = 0.5; // cause i exported the svg's way too big
+
+for (var prop in images) {
+	var im = new Image();
+	im.src = images[prop];
+	images[prop] = im;
+}
 
 var specs = {
     "DP-28": {
@@ -40,7 +56,7 @@ var specs = {
         barrelLength: 70
     },
     "Mosin-Nagant": {
-        delay: 1750,
+        delay: 1250,
         capacity: 5,
         reloadTime: 3000,
         damage: 72,
@@ -53,7 +69,7 @@ var specs = {
 // weapons
 for (var j=0; j<2; j++) {
     let i = j;
-    document.getElementById("p1s" + i).onclick = function() { // click button to toggle petal
+    document.getElementById("p1s" + i).onclick = function() { // click button to toggle gun
         player1.loadout[i]++;
         player1.loadout[i] %= 3;
         this.innerHTML = names[player1.loadout[i]];
@@ -92,16 +108,16 @@ function gameLoop() {
     // handle keys
     var playerWeapon = names[player1.loadout[player1.selected]];
     if (downKeys["KeyW"]) {
-        player1.y -= 1;
+        player1.y -= playerSpeed;
     }
     if (downKeys["KeyS"]) {
-        player1.y += 1;
+        player1.y += playerSpeed;
     }
     if (downKeys["KeyA"]) {
-        player1.x -= 1;
+        player1.x -= playerSpeed;
     }
     if (downKeys["KeyD"]) {
-        player1.x += 1;
+        player1.x += playerSpeed;
     }
     if (downKeys["Digit1"]) {
         player1.selected = 0;
@@ -111,6 +127,7 @@ function gameLoop() {
     }
     // let's not talk about this (very broken code)
     if (mouseDown && player1.delays[player1.selected] <= 0 && player1.roundsRemaining[player1.selected] > 0) {
+        new Audio("./surviv-assets/" + playerWeapon + "_fire.wav").play();
         bullets.push({
             x: player1.x + specs[playerWeapon].barrelLength * Math.cos(player1.angle),
             y: player1.y + specs[playerWeapon].barrelLength * Math.sin(player1.angle),
@@ -139,12 +156,10 @@ function gameLoop() {
     ctx.save();
     ctx.translate(player1.x, player1.y);
     ctx.rotate(player1.angle);
-    ctx.fillRect(-30, -30, 60, 60);
-    ctx.fillStyle = "yellow";
-    ctx.fillRect(30, -18, 20, 20);
-    ctx.fillRect(60, -8, 20, 20);
+    ctx.drawImage(images["player"], -30, -30, 135, 60);
     ctx.fillStyle = specs[playerWeapon].barrelColor;
-    ctx.fillRect(15, -5, specs[playerWeapon].barrelLength, 10);
+    var img = images[playerWeapon + "_world"];
+    ctx.drawImage(img, 15, -img.height/2*imgScaleFactor, img.width*imgScaleFactor, img.height*imgScaleFactor);
     ctx.restore();
 
     // ---------AI----------
@@ -171,18 +186,18 @@ function gameLoop() {
     if (player2.y < 100) {player2.strafeDirection2[1] = 1; player2.strafeDirection1[1] = 1;}
     if (player2.y > 500) {player2.strafeDirection2[1] = -1; player2.strafeDirection1[1] = -1;}
     // strafe
-    if (Math.random() < 0.008) {
+    if (Math.random() < 0.015) {
         player2.currentStrafeDir = !player2.currentStrafeDir;
     }
     if (player2.currentStrafeDir) {
-        player2.x += player2.strafeDirection2[0];
-        player2.y += player2.strafeDirection2[1];
+        player2.x += player2.strafeDirection2[0] * playerSpeed;
+        player2.y += player2.strafeDirection2[1] * playerSpeed;
     } else {
-        player2.x += player2.strafeDirection1[0];
-        player2.y += player2.strafeDirection1[1];
+        player2.x += player2.strafeDirection1[0] * playerSpeed;
+        player2.y += player2.strafeDirection1[1] * playerSpeed;
     }
 
-    if (Math.random() < 0.001) {
+    if (Math.random() < 0.002) {
         player2.newStrafeDir();
     }
 
@@ -190,6 +205,7 @@ function gameLoop() {
 
     // let's not talk about this (very broken code)
     if (player2.delays[player2.selected] <= 0 && player2.roundsRemaining[player2.selected] > 0) {
+        new Audio("./surviv-assets/" + playerWeapon + "_fire.wav").play();
         bullets.push({
             x: player2.x + specs[playerWeapon].barrelLength * Math.cos(player2.angle),
             y: player2.y + specs[playerWeapon].barrelLength * Math.sin(player2.angle),
@@ -215,16 +231,14 @@ function gameLoop() {
     t += Math.random();
 
     // draw the player
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "red";
     ctx.save();
     ctx.translate(player2.x, player2.y);
     ctx.rotate(player2.angle);
-    ctx.fillRect(-30, -30, 60, 60);
-    ctx.fillStyle = "yellow";
-    ctx.fillRect(30, -18, 20, 20);
-    ctx.fillRect(60, -8, 20, 20);
+    ctx.drawImage(images["ai"], -30, -30, 135, 60);
     ctx.fillStyle = specs[playerWeapon].barrelColor;
-    ctx.fillRect(15, -5, specs[playerWeapon].barrelLength, 10);
+    var img = images[playerWeapon + "_world"];
+    ctx.drawImage(img, 15, -img.height/2*imgScaleFactor, img.width*imgScaleFactor, img.height*imgScaleFactor);
     ctx.restore();
 
     // bullets processing
@@ -253,13 +267,12 @@ function gameLoop() {
     ctx.fillStyle = "black";
     ctx.fillText(names[player1.loadout[0]] + (player1.selected==0?" - " + (player1.roundsRemaining[0] + "/" + specs[names[player1.loadout[0]]].capacity):" "), 50, 500);
     ctx.fillText(names[player1.loadout[1]] + (player1.selected==1?" - " + player1.roundsRemaining[1] + "/" + specs[names[player1.loadout[1]]].capacity:""), 50, 550);
-    ctx.fillText("player healths: " + player1.health + ", " + player2.health, 100, 100);
+    ctx.fillText("player healths: " + Math.round(player1.health) + ", " + Math.round(player2.health), 100, 100);
 
     // no cheesing allowed
-    if (!checkCollision(player1.x, player1.y, 20, 20, 0, 0, w, h) || !checkCollision(player2.x, player2.y, 20, 20, 0, 0, w, h)) {
-        clearInterval(gameInterval);
-        ctx.fillText("hey! no going outside the map", 100, 300);
-    }
+    player1.x = Math.max(player1.x, 0); player1.x = Math.min(player1.x, 1000);
+    player1.y = Math.max(player1.y, 0); player1.y = Math.min(player1.y, 600);
+    player2.x = Math.max(player2.x, 0); player2.x = Math.min(player2.x, 1000);
     if (player1.health < 0 || player2.health < 0) {
         clearInterval(gameInterval);
         ctx.fillText("we have a winner!", 100, 300);
