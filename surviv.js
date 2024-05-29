@@ -38,11 +38,11 @@ for (var prop in images) {
 
 var specs = {
     "DP-28": {
-        delay: 115,
-        capacity: 60,
+        delay: 80,
+        capacity: 47,
         reloadTime: 3300,
-        damage: 14,
-        bulletSpeed: 10,
+        damage: 10,
+        bulletSpeed: 7,
         barrelColor: "black",
         barrelLength: 100
     },
@@ -50,8 +50,8 @@ var specs = {
         delay: 90,
         capacity: 20,
         reloadTime: 2700,
-        damage: 15,
-        bulletSpeed: 10,
+        damage: 20,
+        bulletSpeed: 15,
         barrelColor: "brown",
         barrelLength: 70
     },
