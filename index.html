@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -33,6 +35,17 @@
                 height: 600px;
                 left:0; top:0;
             }
+            #endDiv {
+                position: absolute;
+                left:0; top:0;
+                width: 1000px;
+                height: 600px;
+                display: none;
+                background-color: #00000088;
+            }
+            #modeDescription {
+                font-style: italic;
+            }
             strong {color:darkgreen;}
             canvas {
                 image-rendering: pixelated;
@@ -49,8 +62,17 @@
             <strong>Player 1: WASD and cursor, Player 2: AI controlled</strong>
             <h3>Player 1 loadout:</h3>
             <button id="p1s0">DP-28</button> <button id="p1s1">DP-28</button>
-            <br> <br>
+            <h3>Options:</h3>
+            <button id="modeselect">Classic mode</button>
+            <p id="modeDescription">Classic surviv.io 1v1.</p>
             <button onclick="startGame();" style="font-size:larger">Start!</button>
+            </center>
+        </div>
+        <div id="endDiv">
+            <center>
+                <h1>Time's up!</h1>
+                <p id="stats"></p>
+                <p id="score"></p>
             </center>
         </div>
         </center>

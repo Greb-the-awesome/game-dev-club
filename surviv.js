@@ -20,6 +20,7 @@ var player2 = {x: 900, y: 500, health: 100, firingDelay: 10, loadout: [2, 1], se
 };
 player2.newStrafeDir();
 var names = ["DP-28", "SCAR-H", "Mosin-Nagant"], bullets = [];
+var gameMode = 0; // 0 -> classic | 1 -> blitz
 
 var images = { // image --> url
     "player": "./surviv-assets/player_world.svg",
@@ -76,6 +77,39 @@ for (var j=0; j<2; j++) {
     }
 }
 
+// mode select
+document.getElementById("modeselect").onclick = function() {
+    gameMode++; gameMode %= 2;
+    var desc = document.getElementById("modeDescription");
+    if (gameMode == 0) {
+        this.innerHTML = "Classic mode";
+        desc.innerHTML = "Classic surviv.io 1v1.";
+
+        // remove the locked icons from the DP-28s
+        for (var j=0; j<2; j++) {
+            document.getElementById("p1s" + j).innerHTML = "DP-28";
+            let i = j;
+            document.getElementById("p1s" + i).onclick = function() { // click button to toggle gun
+                player1.loadout[i]++;
+                player1.loadout[i] %= 3;
+                this.innerHTML = names[player1.loadout[i]];
+            }
+        }
+    }
+    else if (gameMode == 1) {
+        this.innerHTML = "Blitz mode";
+        desc.innerHTML = "1v1 with infinite health. You have 1 minute to take as much health off the opponent as possible.";
+
+        // lock loadout to DP-28
+        player1.loadout[0] = 0;
+        player1.loadout[1] = 0;
+        for (var j=0; j<2; j++) {
+            document.getElementById("p1s" + j).innerHTML = "🔒 DP-28";
+            document.getElementById("p1s" + j).onclick = function() {};
+        }
+    }
+};
+
 function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2) {
     // x and y are the center
     ax1 = x1 + w1/2;
@@ -93,12 +127,20 @@ function startGame() { // read the button values and scroll
     gameInterval = setInterval(gameLoop, 8.333);
     player1.x = 100; player1.y = 100;
     document.getElementById("guiDiv").style.display = "none";
+
+    if (gameMode == 1) {
+        // blitz mode (infinite health)
+        player1.health = 20000;
+        player2.health = 20000;
+        //
+    }
 }
 
-var t = 0;
+var randomTime = 0, t = 0;
 
 function gameLoop() {
     ctx.clearRect(0, 0, w, h);
+    t += 8.333;
 
     // gui
     ctx.fillStyle = "#000000";
@@ -227,8 +269,8 @@ function gameLoop() {
     player2.reloadRemaining[player2.selected] -= 8.333;
 
     // player rotation
-    player2.angle = Math.atan2(player1.y - player2.y, player1.x - player2.x) + Math.sin(t*0.04) * 0.07;
-    t += Math.random();
+    player2.angle = Math.atan2(player1.y - player2.y, player1.x - player2.x) + Math.sin(randomTime*0.04) * 0.07;
+    randomTime += Math.random();
 
     // draw the player
     ctx.fillStyle = "red";
@@ -268,6 +310,16 @@ function gameLoop() {
     ctx.fillText(names[player1.loadout[0]] + (player1.selected==0?" - " + (player1.roundsRemaining[0] + "/" + specs[names[player1.loadout[0]]].capacity):" "), 50, 500);
     ctx.fillText(names[player1.loadout[1]] + (player1.selected==1?" - " + player1.roundsRemaining[1] + "/" + specs[names[player1.loadout[1]]].capacity:""), 50, 550);
     ctx.fillText("player healths: " + Math.round(player1.health) + ", " + Math.round(player2.health), 100, 100);
+
+    if (gameMode == 1) {
+        ctx.fillText("Time remaining: " + Math.round(60 - t/1000) + "s", 100, 150);
+        if (t > 60000) {
+            document.getElementById("endDiv").style.display = "block";
+            document.getElementById("stats").innerHTML = "You dealt " + Math.round(20000 - player2.health) + " damage to the AI. The AI dealt " + Math.round(20000 - player1.health) + " damage to you.";
+            document.getElementById("score").innerHTML = "Your score (your damage - 0.5 * damage you took) was <strong style='color:white;'>" + Math.round((20000 - player2.health) - 0.5 * (20000 - player1.health)) + "</strong>";
+            clearInterval(gameInterval);
+        }
+    }
 
     // no cheesing allowed
     player1.x = Math.max(player1.x, 0); player1.x = Math.min(player1.x, 1000);
