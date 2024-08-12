@@ -1,0 +1,90 @@
+<meta charset="utf-8">
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Google Fonts :) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cutive&family=East+Sea+Dokdo&family=Righteous&display=swap" rel="stylesheet">
+        <style>
+            * {
+                image-rendering: pixelated;
+                font-family: Cutive, 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                color:chartreuse;
+            }
+            body {
+                background-image: url("./florrio-assets/bg1.png");
+                background-size:400px;
+            }
+            button {
+                background-image: url("./florrio-assets/button.png");
+                background-size: cover;
+                background-position: center center;
+                border: none;
+                padding: 20px;
+                color: darkgreen;
+                margin: 5px;
+            }
+            button:disabled {
+                color: gray;
+            }
+            #guiDiv {
+                position: absolute;
+                width: 1000px;
+                height: 600px;
+                left:0; top:0;
+            }
+            #endDiv {
+                position: absolute;
+                left:0; top:0;
+                width: 1000px;
+                height: 600px;
+                display: none;
+                background-color: #00000088;
+            }
+            #modeDescription {
+                font-style: italic;
+            }
+            strong {color:darkgreen;}
+            canvas {
+                image-rendering: pixelated;
+                background-image: url("./florrio-assets/frame.png");
+                background-size: cover;
+            }
+        </style>
+    </head>
+    <body>
+        <center>
+        <div id="guiDiv">
+            <center>
+            <h1>Surviv.io PvP</h1>
+            <strong>Player 1: WASD and cursor, Player 2: AI controlled</strong>
+            <h3>Player 1 loadout:</h3>
+            <button id="p1s0">DP-28</button> <button id="p1s1">DP-28</button>
+            <h3>Options:</h3>
+            <button id="modeselect">Classic mode</button>
+            <p id="modeDescription">Classic surviv.io 1v1.</p>
+            <button onclick="startGame();" style="font-size:larger">Start!</button>
+            </center>
+        </div>
+        <div id="endDiv">
+            <center>
+                <h1>Time's up!</h1>
+                <p id="stats"></p>
+                <p id="score"></p>
+            </center>
+        </div>
+        </center>
+        <canvas id="canv" width="1000" height="600"></canvas>
+        <script>
+            var downKeys = {}, mousePos = [0, 0], mouseDown = false;
+            window.onmousemove = function(e) {mousePos = [e.offsetX, e.offsetY];}
+            window.onmousedown = function(e) {mouseDown = true;}
+            window.onmouseup = function(e) {mouseDown = false;}
+            window.onkeydown = function(e) {downKeys[e.code] = true; if (e.code == "Space") {player1.selected = player1.selected?0:1;}}
+            window.onkeyup = function(e) {downKeys[e.code] = false; if (e.code == "AltRight") {e.preventDefault();}}
+        </script>
+        <script src="./surviv.js"></script>
+    </body>
+</html>
