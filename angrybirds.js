@@ -29,7 +29,7 @@ Runner.run(runner, engine);
 
 // Ground and platforms
 const ground = Bodies.rectangle(width / 2, height - 10, width, 20, { isStatic: true, render: { fillStyle: '#8B4513' } });
-const platform = Bodies.rectangle(150, height - 100, 300, 20, { isStatic: true, render: { fillStyle: '#8B4513' } });
+const platform = Bodies.rectangle(150, height - 50, 300, 20, { isStatic: true, render: { fillStyle: '#8B4513' } });
 World.add(world, [ground, platform]);
 
 // Create a sling and projectile (the bird)
@@ -42,7 +42,7 @@ let bird = Bodies.circle(150, height - 150, 20, {
 let sling = Constraint.create({
     pointA: { x: 150, y: height - 150 },
     bodyB: bird,
-    stiffness: 0.02,
+    stiffness: 0.014,
     length: 40
 });
 
@@ -57,15 +57,23 @@ const createBoxStack = () => {
     const boxWidth = 40;
     const boxHeight = 40;
 
-    for (let row = 0; row < 3; row++) {
-        for (let col = 0; col < 4; col++) {
+    for (let row = 0; row < 6; row++) {
+        var numCols;
+        if (row < 3) {
+            numCols = 4;
+        } else {
+            numCols = 2;
+        }
+        for (let col = 0; col < numCols; col++) {
             const x = width - 200 + col * boxWidth;
-            const y = height - 200 - row * boxHeight;
+            const y = height - 1 - row * boxHeight;
             boxes.push(
                 Bodies.rectangle(x, y, boxWidth, boxHeight, {
-                    restitution: 0.5,
-                    chamfer: { radius: 10 }, // Adding rounded corners
-                    render: { fillStyle: '#A52A2A' }
+                    restitution: 0.1,
+                    chamfer: { radius: 3 }, // Adding rounded corners
+                    render: { fillStyle: '#A52A2A' },
+                    density: 0.0015,
+                    friction: 0.9
                 })
             );
         }
@@ -89,42 +97,6 @@ const resetBird = () => {
     isBirdLaunched = false; // Reset launch flag
 };
 
-// Launch the bird when the mouse is released
-Events.on(engine, 'afterUpdate', () => {
-    if (!sling.bodyB && (bird.position.x > 200 || bird.position.y < height - 150)) {
-        resetBird();
-    }
-});
-
-// Mouse control to drag the bird
-const mouse = Mouse.create(render.canvas);
-const mouseConstraint = MouseConstraint.create(engine, {
-    mouse: mouse,
-    constraint: {
-        stiffness: 0.02,
-        render: {
-            visible: false
-        }
-    }
-});
-
-World.add(world, mouseConstraint);
-
-// Release the bird from the sling and set the flag
-Events.on(mouseConstraint, 'mouseup', (event) => {
-    if (mouseConstraint.body === bird && !isBirdLaunched) {
-        sling.bodyB = null;
-        isBirdLaunched = true; // Bird has been launched, disable further control
-    }
-});
-
-// Prevent bird dragging after launch
-Events.on(mouseConstraint, 'mousemove', (event) => {
-    if (isBirdLaunched) {
-        mouseConstraint.constraint.bodyB = null; // Disable dragging if bird has been launched
-    }
-});
-
 // Keep the canvas responsive
 window.addEventListener('resize', () => {
     Render.lookAt(render, {
@@ -132,3 +104,55 @@ window.addEventListener('resize', () => {
         max: { x: width, y: height }
     });
 });
+
+// move the bird using WASD, fire using space
+var downKeys = {};
+addEventListener("keydown", function(e) {
+    downKeys[e.code] = true;
+});
+
+addEventListener("keyup", function(e) {
+    downKeys[e.code] = false;
+});
+
+var birdPos = Vector.create(150, height - 150);
+const sensitivity = 1;
+const maxDist = 150;
+var lastSlingLength = 100000;
+
+setInterval(function() {
+    if (downKeys["Space"]) {
+        isBirdLaunched = true;
+    }
+    if (isBirdLaunched) {
+        // remove the sling at the correct time
+        // calculate the current sling length
+        // we would use Constraint.currentLength which is mentioned in the documentation and it's supposed to return the distance between the two bodies of a constraint, exactly what we need
+        // but apparently the joke documentation is literally false as the function is nowhere to be found lmfao
+        // matter.js joke trash documentation moment
+        var currSlingLength = Vector.magnitude(Vector.sub(bird.position, Vector.create(150, height - 150)));
+
+        if (lastSlingLength < currSlingLength) {
+            World.remove(world, sling);
+        }
+        lastSlingLength = currSlingLength;
+        return;
+    }
+    if (downKeys["KeyW"]) {
+        birdPos.y -= sensitivity;
+    }
+    if (downKeys["KeyS"]) {
+        birdPos.y += sensitivity;
+    }
+    if (downKeys["KeyA"]) {
+        birdPos.x -= sensitivity;
+    }
+    if (downKeys["KeyD"]) {
+        birdPos.x += sensitivity;
+    }
+    if (Vector.magnitude(Vector.sub(birdPos, Vector.create(150, height - 150))) > maxDist) {
+        birdPos = Vector.add(Vector.mult(Vector.normalise(Vector.sub(birdPos, Vector.create(150, height - 150))), maxDist-2), Vector.create(150, height - 150));
+    }
+    Body.setPosition(bird, birdPos);
+    Body.setVelocity(bird, Vector.create(0, 0));
+})
