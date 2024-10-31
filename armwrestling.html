@@ -1,61 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Arm Wrestling Game</title>
-  <link rel="stylesheet" href="armwrestling.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Arm Wrestling Game</title>
+    <link rel="stylesheet" href="armwrestling.css">
 </head>
 <body>
-  <div class="game-container">
-    <h1>Ultimate Arm Wrestling Game</h1>
-    
-    <!-- Skill Allocation Phase -->
-    <div class="skill-allocation">
-      <h2>Allocate Skill Points</h2>
-      <p>Skill Points Remaining: <span id="skill-points">10</span></p>
-      <div class="skills">
-        <div class="skill">
-          <label>Strength: <span id="strength-level">0</span></label>
-          <button onclick="upgradeSkill('strength')">+</button>
-        </div>
-        <div class="skill">
-          <label>Stamina: <span id="stamina-level">0</span></label>
-          <button onclick="upgradeSkill('stamina')">+</button>
-        </div>
-        <div class="skill">
-          <label>Technique: <span id="technique-level">0</span></label>
-          <button onclick="upgradeSkill('technique')">+</button>
-        </div>
+    <div class="game-container">
+      <h1>Ultimate Arm Wrestling Game</h1>
+
+      <!-- Instructions Table -->
+      <div id="instructions">
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2">Welcome to the Ultimate Arm Wrestling Game!</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="2">Allocate your skill points to improve your <strong>Strength</strong>, <strong>Stamina</strong>, and <strong>Technique</strong>. Each skill impacts your performance during the match:</td>
+                </tr>
+                <tr>
+                    <td><strong>Strength</strong></td>
+                    <td>Increases your overall power, helping you make stronger moves.</td>
+                </tr>
+                <tr>
+                    <td><strong>Stamina</strong></td>
+                    <td>Allows you to perform more moves before needing to recover.</td>
+                </tr>
+                <tr>
+                    <td><strong>Technique</strong></td>
+                    <td>Boosts the effectiveness of each specific move.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Available Techniques Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2">Available Techniques</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Flop Wrist</strong></td>
+                    <td>An offensive move that puts pressure on your opponent’s wrist, effective for destabilizing them.</td>
+                </tr>
+                <tr>
+                    <td><strong>Pronation</strong></td>
+                    <td>Uses rotational force to control your opponent’s arm, particularly useful for positioning advantage.</td>
+                </tr>
+                <tr>
+                    <td><strong>Hook</strong></td>
+                    <td>A powerful move to lock in your grip, focusing on applying force at close range.</td>
+                </tr>
+                <tr>
+                    <td><strong>Rising</strong></td>
+                    <td>This move emphasizes upward motion, taking advantage of leverage to weaken the opponent's grip.</td>
+                </tr>
+                <tr>
+                    <td><strong>King’s Move</strong></td>
+                    <td>A defensive technique that allows you to maintain resistance at a longer range, effective for countering aggressive moves.</td>
+                </tr>
+                <tr>
+                    <td><strong>Back Pressure</strong></td>
+                    <td>Uses backward force to resist your opponent’s pull, helping you stay in control.</td>
+                </tr>
+                <tr>
+                    <td><strong>Dragging</strong></td>
+                    <td>Moves your opponent’s hand to your side, capitalizing on their lack of control.</td>
+                </tr>
+                <tr>
+                    <td><strong>Press</strong></td>
+                    <td>A finishing move that relies on body weight and downward pressure to quickly end the match.</td>
+                </tr>
+            </tbody>
+        </table>
       </div>
-      <button id="start-game" onclick="startGame()">Start Game</button>
+      
+      <div class="skill-allocation">
+        <h2>Allocate Your Skills</h2>
+        <p>Skill Points Remaining: <span id="skill-points">10</span></p>
+        <div class="skills">
+            <div class="skill">
+                <label>Strength: <span id="strength-level">0</span></label>
+                <button onclick="upgradeSkill('strength')">+</button>
+            </div>
+            <div class="skill">
+                <label>Stamina: <span id="stamina-level">0</span></label>
+                <button onclick="upgradeSkill('stamina')">+</button>
+            </div>
+            <div class="skill">
+                <label>Technique: <span id="technique-level">0</span></label>
+                <button onclick="upgradeSkill('technique')">+</button>
+            </div>
+        </div>
+        <button id="start-game" onclick="startGame()">Start Game</button>
+      </div>
+
+        <!-- Gameplay Phase -->
+        <div class="gameplay hidden">
+            <h2>Match in Progress</h2>
+            <p id="countdown-timer">Time Remaining: <span id="countdown-timer-value">60</span> seconds</p>
+            <p id="game-feedback">Select a technique to play!</p>
+            <div class="actions">
+                <button onclick="useSkill('flopWrist')">Flop Wrist</button>
+                <button onclick="useSkill('pronation')">Pronation</button>
+                <button onclick="useSkill('hook')">Hook</button>
+                <button onclick="useSkill('rising')">Rising</button>
+                <button onclick="useSkill('kingsMove')">King's Move</button>
+                <button onclick="useSkill('backPressure')">Back Pressure</button>
+                <button onclick="useSkill('dragging')">Dragging</button>
+                <button onclick="useSkill('press')">Press</button>
+            </div>
+            <div class="progress-bars">
+                <div>
+                    <span>Player Progress:</span>
+                    <div class="progress">
+                        <div id="player-progress" class="progress-bar"></div>
+                    </div>
+                </div>
+                <div>
+                    <span>Opponent Progress:</span>
+                    <div class="progress">
+                        <div id="opponent-progress" class="progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="resetGame()">Retrain & Play Again</button>
+        </div>
+
+        <div class="win-screen hidden">
+            <h2>You Won!</h2>
+            <button onclick="restartGame()">Play Again</button>
+        </div>
+
+        <div class="lose-screen hidden">
+            <h2>You Lost!</h2>
+            <button onclick="restartGame()">Try Again</button>
+        </div>
+
+        <h1 style="font-size: 3em;">JOIN GAME DEV CLUB FRIDAYS ROOM 224 FOR FREE COKE AND EXTREMELY COOL PEOPLE</h1>
+
     </div>
 
-    <!-- Gameplay Phase -->
-    <div class="gameplay hidden">
-      <h2>Match in Progress</h2>
-      <div class="progress">
-        <div class="progress-bar">
-          <p>Player Progress</p>
-          <div class="bar" id="player-progress"></div>
-        </div>
-        <div class="progress-bar">
-          <p>Opponent Progress</p>
-          <div class="bar" id="opponent-progress"></div>
-        </div>
-      </div>
-      <div class="actions">
-        <button onclick="useSkill('pronation')">Pronation</button>
-        <button onclick="useSkill('hook')">Hook</button>
-        <button onclick="useSkill('rising')">Rising</button>
-        <button onclick="useSkill('flopWrist')">Flop Wrist</button>
-        <button onclick="useSkill('kingsMove')">King's Move</button>
-      </div>
-      <p id="game-feedback"></p>
-      <button onclick="resetGame()">Retrain & Play Again</button>
-    </div>
-  </div>
 
-  <script src="armwrestling.js"></script>
+
+    <script src="armwrestling.js"></script>
 </body>
 </html>
