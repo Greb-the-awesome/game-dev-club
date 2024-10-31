@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Arm Wrestling Game</title>
+  <link rel="stylesheet" href="armwrestling.css">
+</head>
+<body>
+  <div class="game-container">
+    <h1>Ultimate Arm Wrestling Game</h1>
+    
+    <!-- Skill Allocation Phase -->
+    <div class="skill-allocation">
+      <h2>Allocate Skill Points</h2>
+      <p>Skill Points Remaining: <span id="skill-points">10</span></p>
+      <div class="skills">
+        <div class="skill">
+          <label>Strength: <span id="strength-level">0</span></label>
+          <button onclick="upgradeSkill('strength')">+</button>
+        </div>
+        <div class="skill">
+          <label>Stamina: <span id="stamina-level">0</span></label>
+          <button onclick="upgradeSkill('stamina')">+</button>
+        </div>
+        <div class="skill">
+          <label>Technique: <span id="technique-level">0</span></label>
+          <button onclick="upgradeSkill('technique')">+</button>
+        </div>
+      </div>
+      <button id="start-game" onclick="startGame()">Start Game</button>
+    </div>
+
+    <!-- Gameplay Phase -->
+    <div class="gameplay hidden">
+      <h2>Match in Progress</h2>
+      <div class="progress">
+        <div class="progress-bar">
+          <p>Player Progress</p>
+          <div class="bar" id="player-progress"></div>
+        </div>
+        <div class="progress-bar">
+          <p>Opponent Progress</p>
+          <div class="bar" id="opponent-progress"></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button onclick="useSkill('pronation')">Pronation</button>
+        <button onclick="useSkill('hook')">Hook</button>
+        <button onclick="useSkill('rising')">Rising</button>
+        <button onclick="useSkill('flopWrist')">Flop Wrist</button>
+        <button onclick="useSkill('kingsMove')">King's Move</button>
+      </div>
+      <p id="game-feedback"></p>
+      <button onclick="resetGame()">Retrain & Play Again</button>
+    </div>
+  </div>
+
+  <script src="armwrestling.js"></script>
+</body>
+</html>
