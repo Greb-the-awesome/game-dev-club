@@ -33,13 +33,19 @@ var money = 100;
 
 // images
 var images = {
-	"bg": "./btd-assets/bg.svg",
+	"bg": "./btdGUI-assets/bg.svg",
 	"platform": "./btd-assets/platform_world.svg",
 	"bloon": "./btd-assets/bloon.png",
 	"PKP Pecheneg_world": "./btd-assets/pkp_world.svg",
 	"Pecheneg Unlocked_world": "./btd-assets/pkp_world.svg",
 	"M39 EMR_world": "./btd-assets/emr_world.svg",
-	"Vector_world": "./btd-assets/vector_world.svg"
+	"Vector_world": "./btd-assets/vector_world.svg",
+	"inv": "./btdGUI-assets/inv.png",
+	"pkp_loot": "./btdGUI-assets/pkp.webp",
+	"emr_loot": "./btdGUI-assets/m39.webp",
+	"vector_loot": "./btdGUI-assets/vector.webp",
+	"invselect": "./btdGUI-assets/invselect.png",
+	"healthbar": "./btdGUI-assets/livesLeft.png"
 }
 
 for (var prop in images) {
@@ -143,9 +149,9 @@ var towers = [];
 
 // GUI system
 var guiText = [
-	["gleb", "gleb", "30px Calibri", "30px Calibri"],
-	["gleb", "gleb", "30px Calibri", "30px Calibri"],
-	["gleb", "[1] PKP tower | [2] EMR tower | [3] Vector tower", "30px Calibri", "30px Calibri"],
+	["", "", "30px Calibri", "30px Calibri"],
+	["", "", "30px Calibri", "30px Calibri"],
+	["", ""],
 	["", "", "30px Calibri", "30px Calibri"],
 ]
 
@@ -160,10 +166,12 @@ function startGame() { // start the game and remove the home screen
 	gameInterval = setInterval(gameLoop, 8.333);
 	document.getElementById("guiDiv").style.display = "none";
 	canvas.style.display = "block";
-	w = canvas.clientWidth; h = canvas.clientHeight;
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	w = canvas.width;
+	h = canvas.height;
 	setTimeout(function() {
 		setInterval(function() {
-			guiText[0][0] = "Wave number " + currentWave;
 			spawnWave(Math.pow(Math.log(currentWave + 0.5), 2.5) + 5, -Math.pow(0.9, currentWave - 18) + 7.5);
 			currentWave++;
 			money += 25;
@@ -214,12 +222,31 @@ canvas.onclick = function(e) {
 	}
 }
 
+function drawSizedImage(img, xcenter, ycenter, xwidth) {
+	var width = xwidth;
+	var height = img.height / img.width * width;
+	ctx.drawImage(img, xcenter - width/2, ycenter - height/2, width, height);
+}
+
 function gameLoop() {
 	ctx.clearRect(0, 0, w, h);
 	ctx.fillStyle = "lightblue";
 	ctx.drawImage(images.bg, 0, 0, w, h);
 	framesSurvived++;
 	score += 0.3;
+
+	// draw the path
+	{
+		ctx.lineWidth = 5;
+		let age = 0;
+		ctx.beginPath();
+		while (getPath(age)[0] < w) {
+			ctx.moveTo(...getPath(age));
+			ctx.lineTo(...getPath(age+3));
+			age += 3;
+		}
+		ctx.stroke();
+	}
 
 	// draw the bloons + process them
 	var newBloons = [];
@@ -229,7 +256,7 @@ function gameLoop() {
 		b.age++;
 
 		// validation for next frame
-		if (b.x > 1000) { // youre bad at the game :(
+		if (b.x > w) { // youre bad at the game :(
 			lives--;
 			money -= 4;
 		} else if (b.health > 0) { // good if the health > 0
@@ -250,8 +277,8 @@ function gameLoop() {
 	for (var b of bullets) {
 		b.x += b.dx; b.y += b.dy; // kinematics
 
-		if (!checkCollision(b.x, b.y, b.width, b.height, 500, 300, 1000, 600)) {
-			// bullet not in screen so we can't preseve it
+		if (!checkCollision(b.x, b.y, b.width, b.height, w/2, h/2, w, h)) {
+			// bullet not in screen so we can't preserve it
 			continue;
 		}
 
@@ -337,8 +364,6 @@ function gameLoop() {
 	// GUI
 	guiText[1][1] = "SCORE: " + Math.round(score);
 	guiText[0][1] = "MONEY: " + money;
-	guiText[1][0] = "Current tower: " + currentGun;
-	guiText[2][0] = "Lives: " + lives;
 
 	ctx.fillStyle = "black";
 	for (var i=0; i<guiText.length; i++) {
@@ -351,6 +376,37 @@ function gameLoop() {
 		ctx.fillText(guiText[i][1], 980, 40 + i * 50);
 	}
 	ctx.textAlign = "left";
+
+	// width and height of inventory are fixed at 576, 204.8
+	ctx.drawImage(images.inv, w/2-288, h*0.95-204.8, 576, 204.8);
+	// then draw images of the guns with offset so they go into the squares
+	ctx.drawImage(images.pkp_loot, w/2-257.6, h*0.95-122.8, 106, 106);
+	ctx.drawImage(images.emr_loot, w/2-118.4, h*0.95-122.8, 106, 106);
+	ctx.drawImage(images.vector_loot, w/2+18, h*0.95-122.8, 106, 106);
+
+	if (invSelect == 0) {
+		ctx.drawImage(images.invselect, w/2-257.6, h*0.95-122.8, 106, 106);
+	} else if (invSelect == 1) {
+		ctx.drawImage(images.invselect, w/2-118.4, h*0.95-122.8, 106, 106);
+	} else if (invSelect == 2) {
+		ctx.drawImage(images.invselect, w/2+18, h*0.95-122.8, 106, 106);
+	}
+	
+	if (lives > 66) {
+		ctx.fillStyle = "green";
+	} else if (lives > 15) {
+		ctx.fillStyle = "yellow";
+	} else {
+		ctx.fillStyle = "red";
+	}
+	ctx.fillRect(w * 0.05 + 53, h * 0.05 + 55.45, 393.1 * lives/100, 32.2);
+	ctx.drawImage(images.healthbar, w * 0.05, h * 0.05, 462, 100);
+
+	// then draw the current weapon
+	ctx.textAlign = "center";
+	ctx.fillStyle = "black";
+	ctx.font = "41.6px Teko";
+	ctx.fillText(currentGun, w/2, h*0.95-163.2);
 
 	ctx.beginPath();
 	ctx.strokeRect(mouseX-10, mouseY-10, 20, 20);
