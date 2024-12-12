@@ -1,0 +1,22 @@
+/* Set board to center of page, and set text colour and font */
+body {
+    text-align: center;
+    h1 {
+        font-family: Tahoma, Arial, sans-serif;
+        color: skyblue;
+    }
+    p {
+        font-family: Tahoma, Arial, sans-serif;
+        color: #064789;
+    }
+}
+
+/* Make background colour blue, add a light blue border*/
+#board {
+    background-color:#064789;
+    border-top: 15px solid #739fcb;
+    border-left: 15px solid #739fcb;
+    border-right: 15px solid #739fcb;
+    border-bottom: 15px solid #739fcb;
+
+}
