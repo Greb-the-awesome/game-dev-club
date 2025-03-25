@@ -1,0 +1,114 @@
+<meta charset="utf-8">
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Google Fonts :) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cutive&family=East+Sea+Dokdo&family=Righteous&display=swap" rel="stylesheet">
+        <style>
+            * {
+                image-rendering: pixelated;
+                font-family: Cutive, 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                color:chartreuse;
+            }
+            body {
+                background-image: url("./florrio-assets/bg1.png");
+                background-size:400px;
+            }
+            button {
+                background-image: url("./florrio-assets/button.png");
+                background-size: cover;
+                background-position: center center;
+                border: none;
+                padding: 20px;
+                color: darkgreen;
+                margin: 5px;
+            }
+            .addButton {
+                background-image: none;
+                padding: 1px;
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
+            #deadDiv {
+                display: none;
+                background-color: #00000066;
+            }
+            .upgradeDesc {
+                display: inline;
+            }
+            button:disabled {
+                color: gray;
+            }
+            #guiDiv, #deadDiv {
+                position: absolute;
+                width: 1000px;
+                height: 600px;
+                left:0; top:0;
+            }
+            #upgradesDiv {
+                position: absolute;
+                left: 1030px;
+                top: 5px;
+                border: 5px solid black;
+                padding: 15px;
+            }
+            #upgradeHeading {
+                display: inline-block;
+            }
+            #upgradeAmount {
+                display: inline-block;
+                transform: translateX(30px) rotate(45deg);
+                color: white;
+            }
+            strong {color:darkgreen;}
+            canvas {
+                image-rendering: pixelated;
+                background-image: url("./florrio-assets/frame.png");
+                background-size: cover;
+            }
+            #ad {
+                color: red;
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+                font-size: 2.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="guiDiv">
+            <center>
+                <br><br><br>
+            <h1>Diep.io clone</h1>
+            <br><br>
+            <p>No way you don't know how to play diep.io right</p>
+            <p>All enemies here are bots! Let's see how realistic we can make them.</p>
+            <button onclick="startGame();" style="font-size:larger">Start!</button>
+            </center>
+        </div>
+        <div id="deadDiv">
+            <center>
+                <h1>YOU DIED!</h1>
+                <p>Reload the page to replay</p>
+            </center>
+        </div>
+        <div id="upgradesDiv">
+            <h2 id="upgradeHeading">Upgrades</h2>
+            <h2 id="upgradeAmount">x0</h2> <br>
+        </div>
+        <canvas id="canv" width="1000" height="600"></canvas>
+        <p id="ad">COME TO GAME DEV CLUB FRIDAY ROOM 224</p>
+        <script>
+            var downKeys = {}, mousePos = [0, 0], mouseDown = false;
+            var canvas = document.getElementById("canv");
+            var ctx = canvas.getContext("2d");
+            canvas.onmousemove = function(e) {mousePos = [e.offsetX, e.offsetY];}
+            canvas.onmousedown = function(e) {mouseDown = true;}
+            canvas.onmouseup = function(e) {mouseDown = false;}
+            window.onkeydown = function(e) {downKeys[e.code] = true; if (e.code == "Space") {player1.selected = player1.selected?0:1;}}
+            window.onkeyup = function(e) {downKeys[e.code] = false; if (e.code == "AltRight") {e.preventDefault();}}
+        </script>
+        <script src="./diep.js"></script>
+    </body>
+</html>
