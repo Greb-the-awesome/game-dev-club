@@ -76,7 +76,7 @@ function updateStats() {
 	// Update upgrade button enabled/disabled state
 	for (const key in upgradeButtons) {
 		const { button, cost } = upgradeButtons[key];
-		button.disabled = ecs < cost * costMultiplier;
+		button.disabled = ecs < cost;
 	}
 
 	if (ecs < prestigeThreshold) {
