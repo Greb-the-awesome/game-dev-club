@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>The Extremely Greb Rock</title>
+		<!-- Google Fonts :) -->
+		<script src="./rage-assets/matter.min.js"></script>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Cutive&family=East+Sea+Dokdo&family=Righteous&display=swap" rel="stylesheet">
+		<style>
+			* {image-rendering: pixelated; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif}
+
+			/* animations */
+			@keyframes flashing {
+				0% {color: red;}
+				33% {color: green;}
+				66% {color: yellow;}
+				100% {color: red;}
+			}
+			@keyframes fadein {
+				0% {opacity: 1; transform: scale(15);}
+				100% {opacity: 1; transform: scale(1);}
+			}
+
+			/* others */
+			h1 {
+				font-size: 5rem;
+				margin: 0;
+			}
+			h2 {
+				font-size: 2rem;
+			}
+			p {
+				font-size: 2rem;
+			}
+			#flashingcolors {
+				animation-name: flashing;
+				animation-duration: 2s;
+				animation-iteration-count: infinite;
+			}
+			#guiDiv {
+				margin: auto;
+			}
+			#punch1 {
+				opacity: 0;
+				animation-name: fadein;
+				animation-duration: 0.3s;
+				display: inline-block;
+				animation-delay: 1s;
+				animation-fill-mode: forwards;
+			}
+			#punch2 {
+				opacity: 0;
+				animation-name: fadein;
+				animation-duration: 0.3s;
+				display: inline-block;
+				animation-delay: 1.5s;
+				animation-fill-mode: forwards;
+				color: darkred;
+			}
+			#punch3 {
+				opacity: 0;
+				animation-name: fadein;
+				animation-duration: 0.3s;
+				display: inline-block;
+				animation-delay: 2s;
+				animation-fill-mode: forwards;
+			}
+			#punch4 {
+				opacity: 0;
+				animation-name: fadein;
+				animation-duration: 0.3s;
+				display: inline-block;
+				animation-delay: 2.5s;
+				animation-fill-mode: forwards;
+			}
+			#otherGUI {
+				opacity: 0;
+				animation-name: fadein;
+				animation-duration: 1s;
+				animation-delay: 3s;
+				animation-fill-mode: forwards;
+			}
+		</style>
+	</head>
+	<body style="background-image: url('./rage-assets/tex.png'); background-size: cover;">
+		<center>
+			<h2 id="flashingcolors">Come to game dev club in room 224 on Friday</h1>
+			<div id="guiDiv">
+				<h1 id="punch1">The&nbsp;</h1><h1 id="punch2">Extremely&nbsp;</h1><h1 id="punch3">Greb&nbsp;</h1> <h1 id="punch4">Rock</h1>
+				<div id="otherGUI">
+					<p>gleb</p>
+					<button style="background-image: url('./rage-assets/tex.png'); background-size: cover; padding: 2rem; font-size: 2rem;" onclick="startGame();">Start!</button>
+				</div>
+			</div></center>
+		<canvas id="canv" width="1000" height="600" style="display:none;"></canvas>
+		<script>
+			var downKeys = {};
+			window.onkeydown = function(e) {downKeys[e.code] = true;}
+			window.onkeyup = function(e) {downKeys[e.code] = false; if (e.code == "AltRight") {e.preventDefault();}}
+			var mouseDown = false, mouseX = 0, mouseY = 0;
+			window.onmousedown = function() {mouseDown = true;}
+			window.onmouseup = function() {mouseDown = false;}
+			document.getElementById("canv").onmousemove = function(e) {mouseX = e.offsetX; mouseY = e.offsetY;}
+		</script>
+		<script src="./rage.js"></script>
+	</body>
+</html>

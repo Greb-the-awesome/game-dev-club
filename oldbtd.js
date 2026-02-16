@@ -1,3 +1,25 @@
+// basically, I realized that setInterval() is unreliable and even if you want your function to be called every 8.333ms,
+// the browser may call it every 16.667ms on 60hz screens.
+// thus, this is the fix that I have implemented
+var _intervals = [], _id = 0;
+function _run() {
+    for (var it of _intervals) {
+        if (performance.now() - it.lastCalled >= it.delay) {
+            it.lastCalled = performance.now();
+            (async function() {it.func();})();
+        }
+    }
+}
+setInterval(_run, 0);
+setInterval = function(callback, time) {
+    _id++;
+    _intervals.push({func: callback, delay: time, lastCalled: 0, id: _id});
+    return _id;
+}
+function clearInterval(handle) {
+    _intervals = _intervals.filter((it)=>(!(it.id == handle)));
+}
+
 var canvas = document.getElementById("canv");
 var ctx = canvas.getContext("2d"); ctx.imageSmoothingEnabled = false; ctx.font = "50px Cutive";
 var gameInterval;
@@ -6,16 +28,15 @@ var gamestarted = false;
 var globalfriction = 0.7;
 var lives = 100;
 var framesSurvived = 0, score = 0;
-var money = 100;
 
 // specs for all the guns
 var gunSpecs = {
-	"PKP Pecheneg": {
-		delay: 15, // DELAY IS IN FRAMES
-		damage: 25,
-		capacity: 200,
-		currentCapacity: 200,
-		reloadTime: 5000, // RELOAD IN MS
+	"QCW-05": {
+		delay: 10, // DELAY IS IN FRAMES
+		damage: 51,
+		capacity: 75,
+		currentCapacity: 75,
+		reloadTime: 3900, // RELOAD IN SECONDS
 		texture: "green",
 		gunLength: 150,
 		gunWidth: 20,
@@ -24,34 +45,10 @@ var gunSpecs = {
 		bulletSize: 10,
 		spread: 10,
 		piercing: false,
-		sounds: {
-			reload: "https://namerio.biz/audio/guns/pkp_reload_01.mp3",
-			fire: "https://github.com/HasangerGames/suroi/raw/master/client/public/audio/sfx/weapons/lewis_gun_fire.mp3",
-		}
 	},
-	"Pecheneg Unlocked": {
-		delay: 3, // DELAY IS IN FRAMES
+	"SV-98": {
+		delay: 120,
 		damage: 900,
-		capacity: 200,
-		currentCapacity: 200,
-		reloadTime: 2500, // RELOAD IN MS
-		texture: "black",
-		gunLength: 100,
-		gunWidth: 20,
-		bulletTexture: "aqua",
-		bulletSpeed: 15,
-		bulletSize: 25,
-		spread: 3,
-		piercing: true,
-		sounds: {
-			reload: "https://namerio.biz/audio/guns/pkp_reload_01.mp3",
-			fire: "https://namerio.biz/audio/guns/pkp_01.mp3",
-		}
-	}
-	,
-	"M39 EMR": {
-		delay: 80,
-		damage: 300,
 		capacity: 10,
 		currentCapacity: 10,
 		reloadTime: 2500,
@@ -63,49 +60,39 @@ var gunSpecs = {
 		bulletSize: 25,
 		spread: 1,
 		piercing: true,
-		sounds: {
-			reload: "https://namerio.biz/audio/guns/m39_reload_01.mp3",
-			fire: "https://namerio.biz/audio/guns/m39_01.mp3",
-		}
 	},
-	"Vector": {
-		delay: 5,
-		damage: 30,
-		capacity: 25,
-		currentCapacity: 25,
-		reloadTime: 1600,
+	"ARX-160": {
+		delay: 20,
+		damage: 200,
+		capacity: 30,
+		currentCapacity: 30,
+		reloadTime: 1500,
 		texture: "gray",
-		gunLength: 50,
+		gunLength: 100,
 		gunWidth: 20,
-		bulletTexture: "purple",
-		bulletSpeed: 10,
+		bulletTexture: "blue",
+		bulletSpeed: 6,
 		bulletSize: 10,
 		spread: 20,
 		piercing: false,
-		sounds: {
-			reload: "https://namerio.biz/audio/guns/vector_reload_01.mp3",
-			fire: "https://namerio.biz/audio/guns/vector_01.mp3",
-		}
 	}
 };
 
-var currentGun = "PKP Pecheneg";
+var currentGun = "QCW-05";
 var invSelect = 0;
 // gunSettings is the data about the gun you're holding like the current firing delay left
 var gunSettings = {angle: 0, x: 500, y: 300, delay: 0, reloading: false};
-var inv = ["PKP Pecheneg", "M39 EMR", "Vector"];
+var inv = ["QCW-05", "SV-98", "ARX-160"];
 
 // arrays to store the bullets and bloons
 var bullets = [];
 var bloons = [];
-var towers = [];
 
 // GUI system
 var guiText = [
-	["gleb", "gleb", "30px Calibri", "30px Calibri"],
-	["gleb", "gleb", "30px Calibri", "30px Calibri"],
-	["gleb", "[1] PKP tower | [2] EMR tower | [3] Vector tower", "30px Calibri", "30px Calibri"],
-	["", "", "30px Calibri", "30px Calibri"],
+	["capacity", "Lives left:", "30px Calibri", "30px Calibri"],
+	["[reloading?]", "Wave x", "30px Calibri", "30px Calibri"],
+	["Current weapon:", "inventory:", "30px Calibri", "30px Calibri"],
 ]
 
 function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2) {
@@ -120,84 +107,35 @@ function startGame() { // start the game and remove the home screen
 	document.getElementById("guiDiv").style.display = "none";
 	canvas.style.display = "block";
 	w = canvas.clientWidth; h = canvas.clientHeight;
-	setTimeout(function() {
-		setInterval(function() {
-			guiText[0][0] = "Wave number " + currentWave;
-			spawnWave(Math.pow(Math.log(currentWave + 0.5), 2.5) + 5, -Math.pow(0.9, currentWave - 21) + 10);
-			currentWave++;
-			money += 25;
-		}, 7500);
-	}, 5000);
-}
-
-function spawnWave(num, difficulty) {
-	// difficulty: 0 = instant destroy | 1 = regular bloon | 10 = max level, completely ram
-	let delay = 2500/num;
-	let numBloons = num;
-	let diff = difficulty;
-	let f = function(n) {
-		if (n > 0) {
-			var adjDiff = difficulty * (1+Math.random()*0.3);
-			var col = "rgb(" + (adjDiff/10*255) + ", " + (255-adjDiff/10*255) + ", 0)";
-			bloons.push({texture: col, health: 50 * adjDiff, x: 0, y: 300, size: 15 * (Math.sqrt(adjDiff+1)), age: 0});
-			setTimeout(()=>{f(n-1);}, delay);
-		}
-	};
-	f(num);
-}
-
-function getPath(t) {
-	// a parametric defining the path
-	return [t, Math.sin(0.005*t) * 200 + 350];
-}
-
-// wave maker
-var currentWave = 1;
-
-// place down towers
-canvas.onclick = function(e) {
-	if (money >= 100) {
-		towers.push({x: mouseX, y: mouseY, type: currentGun, gunSettings: {angle: 0, delay: 0, currentCapacity: 0}});
-		money -= 100;
-		if (towers.length > 10) {
-			guiText[3][0] = "Audio turned off to save performance."
-			Audio = function(e) {return {play: function() {}};};
-		}
-	} else {
-		alert("not enough money: cost for all towers is 50");
-	}
 }
 
 function gameLoop() {
 	ctx.clearRect(0, 0, w, h);
-	ctx.fillStyle = "lightblue";
+	ctx.fillStyle = "lightgreen";
 	ctx.fillRect(0, 0, w, h);
 	framesSurvived++;
 	score += 0.3;
 
-	// draw the path
-	{
-		let age = 0;
-		ctx.beginPath();
-		while (getPath(age)[0] < 1000) {
-			ctx.moveTo(...getPath(age));
-			ctx.lineTo(...getPath(age+3));
-			age += 3;
+	// spawn a pack of bloons
+	if (Math.random() < 0.002) {
+		for (var i=0; i<Math.random() * 15; i++) {
+			bloons.push({texture: "black", health: 100, x: 0, y: 300, velx: 0, vely: 0, size: 30});
 		}
-		ctx.stroke();
 	}
 
 	// draw the bloons + process them
 	var newBloons = [];
 	for (var b of bloons) {
 		// basic kinematics
-		[b.x, b.y] = getPath(b.age);
-		b.age++;
+		b.vely += Math.pow(Math.random(), 10) * (Math.random() > 0.5?1:-1) * 32;
+		if (b.y <= 10 || b.y >= 590) {b.vely = b.vely * -0.2;}
+		b.velx *= globalfriction; b.vely *= globalfriction;
+		b.x += b.velx + 2;
+		b.y += b.vely;
 
 		// validation for next frame
 		if (b.x > 1000) { // youre bad at the game :(
 			lives--;
-			money -= 4;
 		} else if (b.health > 0) { // good if the health > 0
 			newBloons.push(b);
 		}
@@ -234,7 +172,7 @@ function gameLoop() {
 			}
 		}
 
-		if ((!bulletConsumed || b.piercing) && b.damage > 0) {
+		if (!bulletConsumed || b.piercing) {
 			ctx.fillStyle = b.texture;
 			ctx.fillRect(b.x - b.width/2, b.y - b.height/2, b.width, b.height);
 			newBullets.push(b);
@@ -244,68 +182,56 @@ function gameLoop() {
 	bullets = newBullets;
 
 	// boom boom in the bloon
-	ctx.font = "30px Calibri";
-	for (var t of towers) {
-		var gun = gunSpecs[t.type];
-		ctx.fillStyle = gun.texture;
+	// do some angle calculations
+	var gun = gunSpecs[currentGun];
+	ctx.fillStyle = gun.texture;
+	var dx = mouseX - 500; var dy = mouseY - 300;
+	gunSettings.angle = Math.atan2(dy, dx);
 
-		// we will target a random bloon
-		if (!t.target || !bloons[t.target]) {
-			t.target = Math.floor(Math.random() * bloons.length);
-		}
-		if (bloons.length) {
-			var dx = bloons[t.target].x - t.x, dy = bloons[t.target].y - t.y;
-			t.gunSettings.angle = Math.atan2(dy, dx);
-		}
-		
-		// spread calculations
-		var spreadRadians = gun.spread * Math.PI / 180;
-		var shootingAngle = t.gunSettings.angle + (spreadRadians) * Math.random() - spreadRadians/2;
+	// spread calculations
+	var spreadRadians = gun.spread * Math.PI / 180;
+	var shootingAngle = gunSettings.angle + (spreadRadians) * Math.random() - spreadRadians/2;
 
-		t.gunSettings.delay--;
-		if (t.gunSettings.delay <= 0 && bloons.length && t.gunSettings.currentCapacity > 0) {
-			bullets.push({
-				x: t.x + Math.cos(t.gunSettings.angle) * gun.gunLength / 2,
-				y: t.y + Math.sin(t.gunSettings.angle) * gun.gunLength / 2,
-				width: gun.bulletSize, height: gun.bulletSize,
-				texture: gun.bulletTexture, dx: Math.cos(shootingAngle)*gun.bulletSpeed, dy: Math.sin(shootingAngle)*gun.bulletSpeed,
-				damage: gun.damage, piercing: gun.piercing,
-			});
-			t.gunSettings.delay = gun.delay;
-			t.gunSettings.currentCapacity--;
-			new Audio(gun.sounds.fire).play();
-		}
+	// use the ctx.rotate from last lecture to rotate our gun
+	ctx.save();
+	ctx.translate(500, 300);
+	ctx.rotate(gunSettings.angle);
+	ctx.fillRect(-100, -10, 200, 20);
+	ctx.restore();
 
-		if (t.gunSettings.currentCapacity <= 0 && !t.gunSettings.reloading) {
-			t.gunSettings.reloading = true;
-			let _t = t;
-			new Audio(gun.sounds.reload).play();
-			setTimeout(function() {_t.gunSettings.currentCapacity = gunSpecs[_t.type].capacity; _t.gunSettings.reloading = false;}, gun.reloadTime);
-		}
+	guiText[2][0] = "Current gun: " + currentGun;
+	guiText[0][0] = gun.currentCapacity + " / " + gun.capacity;
+	if (gunSettings.reloading) {
+		guiText[1][0] = "Reloading...";
+	} else {guiText[1][0] = "";}
+	guiText[0][1] = "Lives Left: " + lives;
+	guiText[2][1] = "";
+	for (var i=0; i<inv.length; i++) {
+		guiText[2][1] += "[" + (i+1) + "]: " + inv[i] + " ";
+	}
+	guiText[1][1] = "SCORE: " + Math.round(score);
 
-		if (t.gunSettings.currentCapacity > gun.capacity) {t.gunSettings.currentCapacity = gun.capacity;}
-
-		// draw tower
-		ctx.save();
-		ctx.translate(t.x, t.y);
-		ctx.rotate(t.gunSettings.angle);
-		ctx.fillStyle = gunSpecs[t.type].texture;
-		ctx.fillRect(-gunSpecs[t.type].gunLength/2, -gunSpecs[t.type].gunWidth/2, gunSpecs[t.type].gunLength, gunSpecs[t.type].gunWidth);
-		ctx.restore();
-
-		if (t.gunSettings.reloading) {
-			ctx.fillStyle = "lime";
-			ctx.fillText("Reloading...", t.x, t.y);
-		}
+	gunSettings.delay--;
+	if (gunSettings.delay <= 0 && mouseDown && gun.currentCapacity > 0) {
+		bullets.push({
+			x: 500 + Math.cos(gunSettings.angle) * gun.gunLength / 2,
+			y: 300 + Math.sin(gunSettings.angle) * gun.gunLength / 2,
+			width: gun.bulletSize, height: gun.bulletSize,
+			texture: gun.bulletTexture, dx: Math.cos(shootingAngle)*gun.bulletSpeed, dy: Math.sin(shootingAngle)*gun.bulletSpeed,
+			damage: gun.damage, piercing: gun.piercing,
+		});
+		gunSettings.delay = gun.delay;
+		gun.currentCapacity--;
 	}
 
-	// GUI
-	guiText[1][1] = "SCORE: " + Math.round(score);
-	guiText[0][1] = "MONEY: " + money;
-	guiText[1][0] = "Current tower: " + currentGun;
-	guiText[2][0] = "Lives: " + lives;
+	if (gun.currentCapacity <= 0 && !gunSettings.reloading) {
+		gunSettings.reloading = true;
+		setTimeout(function() {gun.currentCapacity = gun.capacity; gunSettings.reloading = false;}, gun.reloadTime);
+	}
 
-	ctx.fillStyle = "black";
+	if (gun.currentCapacity > gun.capacity) {gun.currentCapacity = gun.capacity;}
+
+	// GUI
 	for (var i=0; i<guiText.length; i++) {
 		ctx.font = guiText[i][2];
 		ctx.fillText(guiText[i][0], 20, 40 + i * 50);
@@ -317,13 +243,12 @@ function gameLoop() {
 	}
 	ctx.textAlign = "left";
 
-	ctx.beginPath();
 	ctx.strokeRect(mouseX-10, mouseY-10, 20, 20);
 	ctx.stroke();
 
 	// process key presses
 	for (var i=0; i<inv.length; i++) {
-		if (downKeys["Digit" + (i+1)] && !gunSettings.reloading) {
+		if (downKeys["Digit" + (i+1)]) {
 			invSelect = i;
 			currentGun = inv[invSelect];
 		}
@@ -331,7 +256,7 @@ function gameLoop() {
 
 	if (lives <= 0) {
 		clearInterval(gameInterval);
-		ctx.font = "40px Impact";
+		ctx.font = "100px Impact";
 		ctx.fillStyle = "black";
 		ctx.fillText("you lose cause your bad", 100, 100);
 		ctx.fillText("yer score was " + Math.round(score) + " and you survived " + framesSurvived + " frames.", 300, 300);

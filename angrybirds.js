@@ -127,7 +127,8 @@ setInterval(function() {
     if (isBirdLaunched) {
         // remove the sling at the correct time
         // calculate the current sling length
-        // we would use Constraint.currentLength which is mentioned in the documentation and it's supposed to return the distance between the two bodies of a constraint, exactly what we need
+        // we would use Constraint.currentLength which is mentioned in the documentation and it's
+        // supposed to return the distance between the two bodies of a constraint, exactly what we need
         // but apparently the joke documentation is literally false as the function is nowhere to be found lmfao
         // matter.js joke trash documentation moment
         var currSlingLength = Vector.magnitude(Vector.sub(bird.position, Vector.create(150, height - 150)));

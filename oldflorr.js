@@ -1,3 +1,25 @@
+// basically, I realized that setInterval() is unreliable and even if you want your function to be called every 8.333ms,
+// the browser may call it every 16.667ms on 60hz screens.
+// thus, this is the fix that I have implemented
+var _intervals = [], _id = 0;
+function _run() {
+    for (var it of _intervals) {
+        if (performance.now() - it.lastCalled >= it.delay) {
+            it.lastCalled = performance.now();
+            (async function() {it.func();})();
+        }
+    }
+}
+setInterval(_run, 0);
+setInterval = function(callback, time) {
+    _id++;
+    _intervals.push({func: callback, delay: time, lastCalled: 0, id: _id});
+    return _id;
+}
+function clearInterval(handle) {
+    _intervals = _intervals.filter((it)=>(!(it.id == handle)));
+}
+
 var canvas = document.getElementById("canv");
 var ctx = canvas.getContext("2d");
 var gameInterval;
