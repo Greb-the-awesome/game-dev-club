@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Florr.io 1v1</h1>
+        <strong>Player 1: WASD and space, Player 2: IJKL and semicolon</strong>
+        <div>
+            <h3>Player 1 loadout:</h3>
+            <button id="p1s0">Light</button> <button id="p1s1">Light</button> <button id="p1s2">Light</button> <button id="p1s3">Light</button> <button id="p1s4">Light</button>
+            <h3>Player 2 loadout:</h3>
+            <button onclick="toggleAI();" id="aibutton">AI/<strong>human</strong></button> <br>
+            <button id="p2s0">Light</button> <button id="p2s1">Light</button> <button id="p2s2">Light</button> <button id="p2s3">Light</button> <button id="p2s4">Light</button>
+            <br> <br>
+            <button onclick="startGame();" style="font-size:larger">Start!</button>
+        </div>
+        <div>
+            <canvas id="canv" width="1000" height="600"></canvas>
+        </div>
+        <script>
+            var downKeys = {};
+            window.onkeydown = function(e) {downKeys[e.code] = true;}
+            window.onkeyup = function(e) {downKeys[e.code] = false; if (e.code == "AltRight") {e.preventDefault();}}
+        </script>
+        <script src="./oldflorr.js"></script>
+    </body>
+</html>

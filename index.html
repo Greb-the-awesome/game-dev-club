@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Development Club</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo"><img src="img/1.1.png" alt="GDC Logo"></div>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#games">Games</a></li>
+                <li><a href="#archive">Archive</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1 data-animate="fade-right">Game Development Club</h1>
+            <p class="tagline" data-animate="fade-right" data-delay="100">Where fun builders create amazing games</p>
+            <div class="meeting-info" data-animate="fade-up" data-delay="200">
+                <span class="badge">📅 Every Friday</span>
+                <span class="badge">📍 Room 222</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2 data-animate="fade-right" class="about-us">About Us</h2>
+            <div class="about-grid">
+                <div class="about-card" data-animate="fade-up" data-delay="0">
+                    <div class="icon">🎓</div>
+                    <h3>Learn</h3>
+                    <p>We teach members how to make games from scratch using various tools and technologies.</p>
+                </div>
+                <div class="about-card" data-animate="fade-up" data-delay="100">
+                    <div class="icon">🎤</div>
+                    <h3>Present</h3>
+                    <p>Members showcase their own games or share cool techniques they've discovered.</p>
+                </div>
+                <div class="about-card" data-animate="fade-up" data-delay="200">
+                    <div class="icon">🕹️</div>
+                    <h3>Play</h3>
+                    <p>We play and test each other's games, giving feedback and having fun together.</p>
+                </div>
+                <div class="about-card" data-animate="fade-up" data-delay="300">
+                    <div class="icon">🍿</div>
+                    <h3>Snacks</h3>
+                    <p>No meeting is complete without a lot of snacks to fuel our creativity!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <h2>Club Life</h2>
+            <p class="section-desc">See what happens at our meetings!</p>
+            <div class="gallery-grid">
+                <div class="gallery-item large">
+                    <img src="img/random club meeting shot - better.jpg" alt="Club meeting">
+                    <div class="gallery-caption">Working on projects together</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="img/random club meeting shot - better (2).jpg" alt="Club collaboration">
+                    <div class="gallery-caption">Collaboration in action</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="img/random club meeting shot.jpg" alt="Club session">
+                    <div class="gallery-caption">Friday sessions</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="img/random club meeting shot (2).jpg" alt="Club members coding">
+                    <div class="gallery-caption">Members coding</div>
+                </div>
+                <div class="gallery-item snacks">
+                    <img src="img/massive food vault.jpg" alt="Snack vault">
+                    <div class="gallery-caption">The legendary snack vault</div>
+                </div>
+                <div class="gallery-item snacks">
+                    <img src="img/massive food vault (2).jpg" alt="More snacks">
+                    <div class="gallery-caption">We take snacks seriously</div>
+                </div>
+                <div class="gallery-item snacks">
+                    <img src="img/massive food vault (3).jpg" alt="Snack collection">
+                    <div class="gallery-caption">Fuel for creativity</div>
+                </div>
+                <div class="gallery-item snacks">
+                    <img src="img/more food at meetings.jpg" alt="Meeting snacks">
+                    <div class="gallery-caption">Meeting refreshments</div>
+                </div>
+                <div class="gallery-item snacks">
+                    <img src="img/food shot.jpg" alt="Snack spread">
+                    <div class="gallery-caption">Snack spread</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="games" class="games">
+        <div class="container">
+            <h2 class="our-games">Our Games</h2>
+            <p class="section-desc">Check out the games we've built together!</p>
+            <div class="games-grid">
+                <a href="https://gdc.zombiewars.net/angrybirds" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/angry birds.png" alt="Angry Birds">
+                    </div>
+                    <div class="game-info">
+                        <h3>Angry Birds</h3>
+                        <p>Physics experiment with Matter.js engine</p>
+                    </div>
+                </a>
+
+                <a href="https://gdc.zombiewars.net/armwrestling" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/arm wrestling.png" alt="Arm Wrestling">
+                    </div>
+                    <div class="game-info">
+                        <h3>Arm Wrestling Simulator</h3>
+                        <p>Advanced techniques: pronation, king's move, hook</p>
+                    </div>
+                </a>
+
+                <a href="https://gdc.zombiewars.net/tetrisv3" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/tetris.png" alt="Tetris">
+                    </div>
+                    <div class="game-info">
+                        <h3>Tetris v3</h3>
+                        <p>SRS, kick tables, soft drop, lock delay & more</p>
+                    </div>
+                </a>
+
+                <a href="https://gdc.zombiewars.net/btdGUI" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/btd game.png" alt="BTD6 Clone">
+                    </div>
+                    <div class="game-info">
+                        <h3>BTD6 Clone</h3>
+                        <p>Custom towers, balanced waves, vector sprites</p>
+                    </div>
+                </a>
+
+                <a href="https://gdc.zombiewars.net/pong" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/pong.png" alt="Pong">
+                    </div>
+                    <div class="game-info">
+                        <h3>Pong</h3>
+                        <p>Classic pong with realistic physics</p>
+                    </div>
+                </a>
+
+                <a href="https://gdc.zombiewars.net/breakout" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/breakout game.png" alt="Breakout">
+                    </div>
+                    <div class="game-info">
+                        <h3>Breakout</h3>
+                        <p>Classic clone developed in just one week</p>
+                    </div>
+                </a>
+
+                <a href="https://gdc.zombiewars.net/clicker" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/clicker game.png" alt="Clicker">
+                    </div>
+                    <div class="game-info">
+                        <h3>Clicker</h3>
+                        <p>Satirical university applications themed game</p>
+                    </div>
+                </a>
+
+                <a href="https://gdc.zombiewars.net/diep" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/diep.png" alt="Diep.io Clone">
+                    </div>
+                    <div class="game-info">
+                        <h3>Diep.io Clone</h3>
+                        <p>Tank battle arena with AI bots</p>
+                    </div>
+                </a>
+
+                <a href="https://gdc.zombiewars.net/florr" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/florr.png" alt="Florr.io Clone">
+                    </div>
+                    <div class="game-info">
+                        <h3>Florr.io Clone</h3>
+                        <p>Beautiful pixel art created by our club</p>
+                    </div>
+                </a>
+
+                <a href="https://gdc.zombiewars.net/life" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/conway's game of life.png" alt="Game of Life">
+                    </div>
+                    <div class="game-info">
+                        <h3>Game of Life</h3>
+                        <p>Conway's classic cellular automaton</p>
+                    </div>
+                </a>
+
+                <a href="https://gdc.zombiewars.net/shatter" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/smash hit clone.png" alt="Shatter">
+                    </div>
+                    <div class="game-info">
+                        <h3>Shatter</h3>
+                        <p>Smash Hit clone with linked body physics</p>
+                    </div>
+                </a>
+
+                <a href="https://gdc.zombiewars.net/shooter" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/shooter.png" alt="2D Shooter">
+                    </div>
+                    <div class="game-info">
+                        <h3>2D Shooter</h3>
+                        <p>The obligatory shooter every dev must make</p>
+                    </div>
+                </a>
+
+                <a href="https://gdc.zombiewars.net/surviv" class="game-card" target="_blank">
+                    <div class="game-image">
+                        <img src="img/surviv.png" alt="Surviv">
+                    </div>
+                    <div class="game-info">
+                        <h3>Surviv</h3>
+                        <p>Battle royale with modes & weapon strategy</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="archive" class="archive">
+        <div class="container">
+            <h2>Archive</h2>
+            <p class="section-desc">Older versions and experiments from our development journey</p>
+            <div class="archive-list">
+                <a href="https://gdc.zombiewars.net/tetr" class="archive-item" target="_blank">
+                    <span class="archive-name">Tetr</span>
+                    <span class="archive-desc">Old Tetris version</span>
+                </a>
+                <a href="https://gdc.zombiewars.net/betrtetr" class="archive-item" target="_blank">
+                    <span class="archive-name">Betrtetr</span>
+                    <span class="archive-desc">Old Tetris version</span>
+                </a>
+                <a href="https://gdc.zombiewars.net/betterpong" class="archive-item" target="_blank">
+                    <span class="archive-name">Better Pong</span>
+                    <span class="archive-desc">Pong experiment (too easy!)</span>
+                </a>
+                <a href="https://gdc.zombiewars.net/btd" class="archive-item" target="_blank">
+                    <span class="archive-name">BTD</span>
+                    <span class="archive-desc">Old BTD6 version</span>
+                </a>
+                <a href="https://gdc.zombiewars.net/oldbtd" class="archive-item" target="_blank">
+                    <span class="archive-name">Old BTD</span>
+                    <span class="archive-desc">Old BTD6 version</span>
+                </a>
+                <a href="https://gdc.zombiewars.net/oldflorr" class="archive-item" target="_blank">
+                    <span class="archive-name">Old Florr</span>
+                    <span class="archive-desc">Old Florr.io version</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Game Development Club</p>
+            <p>> Every Friday @ Room 222</p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll Animation with Intersection Observer
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = entry.target.dataset.delay || 0;
+                    setTimeout(() => {
+                        entry.target.classList.add('animated');
+                    }, delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with data-animate attribute
+        document.querySelectorAll('[data-animate]').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add staggered animation to game cards and gallery items
+        const staggerObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const items = entry.target.querySelectorAll('.game-card, .gallery-item, .archive-item');
+                    items.forEach((item, index) => {
+                        setTimeout(() => {
+                            item.classList.add('animated');
+                        }, index * 80);
+                    });
+                    staggerObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.05 });
+
+        // Observe grid containers
+        document.querySelectorAll('.games-grid, .gallery-grid, .archive-list').forEach(grid => {
+            staggerObserver.observe(grid);
+        });
+
+        // Section headers animation
+        document.querySelectorAll('.gallery h2, .games h2, .archive h2').forEach(el => {
+            el.setAttribute('data-animate', 'fade-right');
+            observer.observe(el);
+        });
+
+        document.querySelectorAll('.section-desc').forEach(el => {
+            el.setAttribute('data-animate', 'fade-right');
+            el.setAttribute('data-delay', '100');
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

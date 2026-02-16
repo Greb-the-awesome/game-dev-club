@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pong Game</title>
+        <style>
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background-color: #222;
+                font-family: Arial, sans-serif;
+            }
+            
+            h1 {
+                color: #fff;
+                text-align: center;
+                font-size: 36px;
+                margin-bottom: 20px;
+            }
+            
+            canvas {
+                border: 2px solid #fff;
+                background-color: black;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Play Pong!<br>Controls: W and S</h1>
+        <canvas id="canv" width="1000" height="600"></canvas>
+        <script>
+            var downKeys = {};
+            window.onkeydown = function(e) {downKeys[e.code] = true;}
+            window.onkeyup = function(e) {downKeys[e.code] = false;}
+        </script>
+        <script src="./betterpong.js"></script>
+    </body>
+</html>

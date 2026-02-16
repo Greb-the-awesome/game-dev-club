@@ -1,0 +1,83 @@
+<meta charset="utf-8">
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Google Fonts :) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cutive&family=East+Sea+Dokdo&family=Righteous&display=swap" rel="stylesheet">
+        <script src="./rage-assets/matter.min.js"></script>
+        <style>
+            * {
+                image-rendering: pixelated;
+                font-family: Cutive, 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                color:chartreuse;
+            }
+            body {
+                background-image: url("./shatter-assets/defaultbg.svg");
+                background-size:400px;
+            }
+            button {
+                background-image: url("./florrio-assets/button.png");
+                background-size: cover;
+                background-position: center center;
+                border: none;
+                padding: 20px;
+                color: darkgreen;
+                margin: 5px;
+            }
+            button:disabled {
+                color: gray;
+            }
+            #guiDiv {
+                position: absolute;
+                width: 1000px;
+                height: 600px;
+                left:0; top:0;
+                background-image: url("./shatter-assets/menu.svg");
+            }
+            #endDiv {
+                position: absolute;
+                left:0; top:0;
+                width: 1000px;
+                height: 600px;
+                display: none;
+                background-color: #00000088;
+            }
+            strong {color:white;}
+            canvas {
+                position: absolute;
+                left: 0; top: 0;
+                image-rendering: pixelated;
+                background-image: url("./florrio-assets/frame.png");
+                background-size: cover;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canv" width="1000" height="600"></canvas>
+        <center>
+        <div id="guiDiv">
+            <center>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <button onclick="startGame();" style="font-size:larger">Start</button>
+            </center>
+        </div>
+        <div id="endDiv">
+            <h1>YOU CRASHED</h1>
+            <p>haha lol you suck</p>
+            <p id="scoreDisplay"></p>
+        </div>
+        </center>
+        <script>
+            var downKeys = {}, mousePos = [0, 0], mouseDown = false;
+            window.onmousemove = function(e) {mousePos = [e.offsetX, e.offsetY];}
+            window.onmousedown = function(e) {mouseDown = true;}
+            window.onmouseup = function(e) {mouseDown = false;}
+            window.onkeydown = function(e) {downKeys[e.code] = true; if (e.code == "Space") {player1.selected = player1.selected?0:1;}}
+            window.onkeyup = function(e) {downKeys[e.code] = false; if (e.code == "AltRight") {e.preventDefault();}}
+        </script>
+        <script src="./shatter.js"></script>
+    </body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>[turret] tower defense 6[.9]</title>
+		<!-- Google Fonts :) -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Cutive&family=East+Sea+Dokdo&family=Righteous&display=swap" rel="stylesheet">
+		<style>
+			/* animations */
+			@keyframes slap {
+				0% {opacity: 0; transform: rotateX(-70deg);}
+				75% {opacity: 0; transform: rotateX(-70deg) scale(10);}
+				100% {opacity: 1; transform: scale(1.3) rotate(10deg);}
+			}
+
+			@keyframes drop {
+				0% {transform: translate(1000px, 0px);}
+				75% {transform: translate(1000px, 0px);}
+				100% {transform: translate(0, 0);}
+			}
+
+			/* everything else */			
+			#b {
+				display: inline-block;
+				color: red;
+				animation-name: slap;
+				animation-duration: 0.7s;
+				animation-fill-mode: forwards; /* freeze after the animation stopped playing */
+			}
+			#pointnine {
+				display: inline-block;
+				color: orange;
+				animation-name: drop;
+				animation-duration: 1s;
+				animation-fill-mode: forwards; /* freeze after the animation stopped playing */
+			}
+			h1 {
+				font-family: "Impact";
+				font-size: 4rem;
+			}
+			h2 {
+				font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+			}
+		</style>
+	</head>
+	<body style="background-image: url('./btd-assets/bg.png');">
+		<center>
+		<h3>Come to game dev club this Friday the 26th in room 224</h3>
+		<div id="guiDiv">
+			<center>
+			<h1 id="b">T </h1><h1 style="display:inline-block;">T D 6</h1> <h1 id="pointnine"> (.9)</h1> <br>
+			
+			<strong>Turret tower defense 69</strong>
+			<br> <br>
+			<button onclick="startGame();" style="font-size:larger">Start!</button>
+			<br><br>
+			<h2>HOW TO PLAY:<br>
+			Bloons will appear at the left side of the map, and you don't want them to get to the right side!<br>
+			Kill bloons by shooting them with your two weapons on your turret. (click to shoot)<br>
+			You only have 100 lives before you lose the game.<br><br>
+		
+			this also kinda looks like an aim trainer so if you wanna get better<br>
+			at val then you can play this game too xdxdxd</h2>
+			</center>
+		</div>
+		</center>
+		<canvas id="canv" width="1000" height="600" style="display:none;"></canvas>
+		<script>
+			var downKeys = {};
+			window.onkeydown = function(e) {downKeys[e.code] = true;}
+			window.onkeyup = function(e) {downKeys[e.code] = false; if (e.code == "AltRight") {e.preventDefault();}}
+			var mouseDown = false, mouseX = 0, mouseY = 0;
+			window.onmousedown = function() {mouseDown = true;}
+			window.onmouseup = function() {mouseDown = false;}
+			document.getElementById("canv").onmousemove = function(e) {mouseX = e.offsetX; mouseY = e.offsetY;}
+		</script>
+		<script src="./olderbtd.js"></script>
+	</body>
+</html>

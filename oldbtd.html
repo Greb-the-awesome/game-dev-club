@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>[turret] tower defense 6[.9]</title>
+		<!-- Google Fonts :) -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Cutive&family=East+Sea+Dokdo&family=Righteous&display=swap" rel="stylesheet">
+		<style>
+			/* animations */
+			@keyframes slap {
+				0% {opacity: 0; transform: rotateX(-70deg);}
+				75% {opacity: 0; transform: rotateX(-70deg) scale(10);}
+				100% {opacity: 1; transform: scale(1.3) rotate(10deg);}
+			}
+
+			@keyframes drop {
+				0% {transform: translate(1000px, 0px);}
+				75% {transform: translate(1000px, 0px);}
+				100% {transform: translate(0, 0);}
+			}
+			@keyframes fadein {
+				0% {opacity: 0;}
+				50% {opacity: 0;}
+				100% {opacity: 1;}
+			}
+			@keyframes pulse {
+				0% {transform: rotate(45deg) scale(1);}
+				50% {transform: rotate(45deg) scale(1.4);}
+				100% {transform: rotate(45deg) scale(1);}
+			}
+
+			/* everything else */	
+			*::-webkit-scrollbar {
+				display: none;
+			}
+			
+			#b {
+				display: inline-block;
+				color: red;
+				animation-name: slap;
+				animation-duration: 0.7s;
+				animation-fill-mode: forwards; /* freeze after the animation stopped playing */
+			}
+			#pointnine {
+				display: inline-block;
+				color: orange;
+				animation-name: drop;
+				animation-duration: 1s;
+				animation-fill-mode: forwards; /* freeze after the animation stopped playing */
+			}
+			#desc {
+				font-family: "Impact";
+				font-size: 3rem;
+				margin: 0.2rem;
+				font-style: italic;
+				color: #40a887;
+			}
+			#otherguis {
+				animation-name: fadein;
+				animation-duration: 3s;
+			}
+			#smallmsg {
+				position: absolute;
+				left: 35rem;
+				top: -15rem;
+				animation-name: pulse;
+				animation-duration: 0.5s;
+				animation-iteration-count: infinite;
+				z-index: 69420;
+				width: 100px;
+				color: #40a887;
+				font-family: Impact;
+				font-size: 3rem;
+			}
+			h1 {
+				font-family: "Impact";
+				font-size: 10rem;
+				margin-top: 0;
+				margin-bottom: 1rem;
+			}
+			h2 {
+				font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+			}
+		</style>
+	</head>
+	<body style="background-image: url('./btd-assets/bg.png');">
+		<center>
+		<h3>Come to game dev club this Friday the 3rd in room 224</h3>
+		<div id="guiDiv">
+			<center>
+			<span style="position: relative; display: inline-block; width: 0px;">
+				<p id="smallmsg" style="opacity: 0;">Actually&nbsp;BTD!</p>
+			</span>
+			<h1 id="b">T</h1><h1 style="display:inline-block;">T D 6</h1> <h1 id="pointnine"> (.9)</h1> <br>
+			
+			<div id="otherguis">
+				<p id="desc">Turret tower defense 69</p>
+				<br> <br>
+				<button onclick="startGame();" style="font-size:larger">Start!</button>
+				<br><br>
+				<h2>HOW TO PLAY:<br>
+				Bloons will appear on the left.<br>Prevent them from getting to the right by placing down towers (click).
+				<br>Use number keys 1, 2, 3 to try different towers.</h2>
+			</div>
+			</center>
+		</div>
+		</center>
+		<canvas id="canv" width="1000" height="600" style="display:none;"></canvas>
+		<script>
+			var downKeys = {};
+			window.onkeydown = function(e) {downKeys[e.code] = true;}
+			window.onkeyup = function(e) {downKeys[e.code] = false; if (e.code == "AltRight") {e.preventDefault();}}
+			var mouseDown = false, mouseX = 0, mouseY = 0;
+			window.onmousedown = function() {mouseDown = true;}
+			window.onmouseup = function() {mouseDown = false;}
+			document.getElementById("canv").onmousemove = function(e) {mouseX = e.offsetX; mouseY = e.offsetY;}
+
+			{ // most complicated fadein ever
+				let opacity = 0;
+				let elem = document.getElementById("smallmsg");
+				let f = function() {if (opacity >= 1) {return;} else {opacity += 0.01; elem.style.opacity = opacity; setTimeout(f, 20);}};
+				setTimeout(f, 2000);
+			}
+		</script>
+		<script src="./oldbtd.js"></script>
+	</body>
+</html>
